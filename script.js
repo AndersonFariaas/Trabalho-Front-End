@@ -49,3 +49,57 @@ newsletterForm.addEventListener("submit", event => {
         newsletterForm.reset();
     }
 });
+
+/* =====================================================
+MODAIS DE PRODUTOS
+====================================================== */
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.add('active');
+        // Impede a página por trás de rolar enquanto o modal está aberto
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        // Restaura a rolagem da página
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Fechar o modal ao clicar fora da caixa branca (no fundo escuro)
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+});
+
+/* =====================================================
+CLARO E ESCURO
+====================================================== */
+
+const botaoTema = document.getElementById("botaoTema");
+
+botaoTema.addEventListener("click", function () {
+
+    document.body.classList.toggle("modo-escuro");
+
+    if (document.body.classList.contains("modo-escuro")) {
+
+        botaoTema.textContent = "☀️ Modo Claro";
+
+    } else {
+
+        botaoTema.textContent = "🌙 Modo Escuro";
+
+    }
+
+});

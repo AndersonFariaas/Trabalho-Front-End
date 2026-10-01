@@ -20,19 +20,28 @@
     <!-- HEADER -->
     <header>
         <nav>
+
             <a href="#" class="logo">
                 SENAI FIRJAN
             </a>
+
             <div class="nav-links" id="navLinks">
                 <a href="#produtos">Produtos</a>
                 <a href="#sobre">Sobre Nós</a>
                 <a href="#contato">Contato</a>
             </div>
+
+            <!-- BOTÃO DE TEMA -->
+            <button id="botaoTema">
+                🌙 Modo Escuro
+            </button>
+
             <div class="nav-actions">
                 <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">
                     ☰
                 </button>
             </div>
+
         </nav>
     </header>
 
@@ -46,7 +55,8 @@
                     <div class="eyebrow">Tecnologia · Educação · Indústria</div>
                     <h1>Soluções do<br>Futuro, Hoje.</h1>
                     <p class="hero-copy">
-                        Descubra o portfólio de produtos e projetos desenvolvidos pelos alunos e profissionais do SENAI FIRJAN. Inovação que transforma a indústria.
+                        Descubra o portfólio de produtos e projetos desenvolvidos pelos alunos e profissionais do SENAI
+                        FIRJAN. Inovação que transforma a indústria.
                     </p>
                     <div class="buttons">
                         <a class="btn btn-primary" href="#produtos">Ver Produtos</a>
@@ -79,29 +89,227 @@
                 <div class="section-head">
                     <div class="eyebrow">Catálogo</div>
                     <h2>Nossos Produtos</h2>
-                    <p>Espaço reservado para a listagem dos produtos desenvolvidos.</p>
+                    <p>Selecione uma categoria abaixo para abrir a grelha (modal) de produtos.</p>
                 </div>
 
-                <div class="product-grid">
-                    <!-- CARDS VAZIOS PARA A OUTRA EQUIPE -->
-                    <article class="product-card empty-card">
-                        <span>[Card de Produto 1]</span>
-                    </article>
-
-                    <article class="product-card empty-card">
-                        <span>[Card de Produto 2]</span>
-                    </article>
-
-                    <article class="product-card empty-card">
-                        <span>[Card de Produto 3]</span>
-                    </article>
-                    
-                    <article class="product-card empty-card">
-                        <span>[Card de Produto 4]</span>
-                    </article>
+                <!-- BOTÕES PARA ABRIR OS MODAIS -->
+                <div class="category-buttons">
+                    <button class="btn btn-primary" onclick="openModal('modal-1')">Tecnologia e computadores</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-2')">Celulares e dispositivos</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-3')">Escritório e conforto</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-4')">Moda e acessórios</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-5')">Veículos e mobilidade</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-6')">Casa e utilidades</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-7')">Alimentos e bebidas</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-8')">Cultura, Colecionáveis e
+                        Ficção</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-9')">Curiosidades, Itens
+                        Especiais</button>
                 </div>
             </div>
         </section>
+
+        <!-- ESTRUTURA DOS MODAIS (Pode ficar aqui ou no final do body) -->
+
+        <!-- MODAL 1 -->
+        <div class="modal-overlay" id="modal-1">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Tecnologia e computadores</h3>
+                    <button class="close-btn" onclick="closeModal('modal-1')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                    <article class="product-card empty-card"><span>[Card 9]</span></article>
+                    <article class="product-card empty-card"><span>[Card 10]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 2 -->
+        <div class="modal-overlay" id="modal-2">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Celulares e dispositivos</h3>
+                    <button class="close-btn" onclick="closeModal('modal-2')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 3 -->
+        <div class="modal-overlay" id="modal-3">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Escritório e conforto</h3>
+                    <button class="close-btn" onclick="closeModal('modal-3')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 4 -->
+        <div class="modal-overlay" id="modal-4">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Moda e acessórios</h3>
+                    <button class="close-btn" onclick="closeModal('modal-4')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 5 -->
+        <div class="modal-overlay" id="modal-5">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Veículos e mobilidade</h3>
+                    <button class="close-btn" onclick="closeModal('modal-5')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 6 -->
+        <div class="modal-overlay" id="modal-6">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Casa e utilidades</h3>
+                    <button class="close-btn" onclick="closeModal('modal-6')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 7 -->
+        <div class="modal-overlay" id="modal-7">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Alimentos e bebidas</h3>
+                    <button class="close-btn" onclick="closeModal('modal-7')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 8 -->
+        <div class="modal-overlay" id="modal-8">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Cultura, Colecionáveis e Ficção</h3>
+                    <button class="close-btn" onclick="closeModal('modal-8')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 9 -->
+        <div class="modal-overlay" id="modal-9">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3>Curiosidades, Itens Especiais</h3>
+                    <button class="close-btn" onclick="closeModal('modal-9')" aria-label="Fechar">&times;</button>
+                </div>
+                <!-- GRID COM 4 COLUNAS -->
+                <div class="modal-grid">
+                    <article class="product-card empty-card"><span>[Card 1]</span></article>
+                    <article class="product-card empty-card"><span>[Card 2]</span></article>
+                    <article class="product-card empty-card"><span>[Card 3]</span></article>
+                    <article class="product-card empty-card"><span>[Card 4]</span></article>
+
+                    <article class="product-card empty-card"><span>[Card 5]</span></article>
+                    <article class="product-card empty-card"><span>[Card 6]</span></article>
+                    <article class="product-card empty-card"><span>[Card 7]</span></article>
+                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                </div>
+            </div>
+        </div>
 
         <!-- SOBRE A MARCA -->
         <section class="about" id="sobre">
@@ -117,7 +325,8 @@
                     <div class="eyebrow">Nossa Missão</div>
                     <h2>Educação e Tecnologia.</h2>
                     <p class="about-text">
-                        O SENAI FIRJAN atua impulsionando o desenvolvimento industrial através de capacitação profissional e inovação tecnológica. Nossos produtos refletem o compromisso com a excelência.
+                        O SENAI FIRJAN atua impulsionando o desenvolvimento industrial através de capacitação
+                        profissional e inovação tecnológica. Nossos produtos refletem o compromisso com a excelência.
                     </p>
 
                     <div class="benefits">
@@ -165,4 +374,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
