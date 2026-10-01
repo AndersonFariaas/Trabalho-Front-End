@@ -31,12 +31,20 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: var(--bg);
+    font-family: Arial, Helvetica, sans-serif, 'Times New Roman', Times, serif, Geneva, Tahoma, sans-serif;
     color: var(--text);
+    /* Corrigido de --gh-text para --text */
+    background: var(--bg);
+    /* Corrigido de --gh-bg para --bg */
+    line-height: 1.6;
     transition:
         background-color 0.6s ease,
         color 0.6s ease;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 /* BARRA DE PROMOÇÃO */
@@ -115,6 +123,12 @@ nav {
     color: var(--text);
     font-size: 24px;
     cursor: pointer;
+}
+
+/* Esconder o menu hambúrguer no desktop */
+.menu-btn {
+    display: none;
+    transition: 0.3s;
 }
 
 /* HERO */
@@ -348,32 +362,66 @@ h2 {
 }
 
 /* NEWSLETTER */
+/* NEWSLETTER */
 
 .newsletter {
     padding: 80px 20px;
     text-align: center;
+    background: var(--card);
+    /* Usar o fundo do card para destacar ou var(--bg) se quiser liso */
+    color: var(--text);
+    transition: 0.6s;
+}
+
+.newsletter h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text);
+    /* Removido o fixo #fff para funcionar no modo claro/escuro */
 }
 
 .newsletter p {
+    max-width: 520px;
+    margin: 16px auto 28px;
     color: var(--secondary-text);
-    margin-bottom: 25px;
+    /* Corrigido de --gh-muted */
 }
 
 .form {
-    max-width: 600px;
+    max-width: 500px;
     margin: auto;
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    background: transparent;
+    padding: 0;
+    border: none;
 }
 
 .form input {
     flex: 1;
-    padding: 14px;
-    border-radius: 8px;
+    background-color: var(--bg);
+    /* Fundo dinâmico */
     border: 1px solid var(--border);
-    background: var(--card);
+    /* Borda dinâmica */
+    outline: 0;
+    padding: 12px 16px;
+    border-radius: 6px;
     color: var(--text);
-    outline: none;
+    /* Texto dinâmico */
+}
+
+.form button {
+    background-color: var(--blue);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form button:hover {
+    background-color: var(--blue-dark);
 }
 
 /* FOOTER */
@@ -407,16 +455,6 @@ footer {
 
 @media (max-width: 600px) {
 
-    nav {
-        flex-wrap: wrap;
-    }
-
-    .nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-    }
-
     .product-grid {
         grid-template-columns: 1fr;
     }
@@ -427,6 +465,53 @@ footer {
 
     .buttons {
         flex-direction: column;
+    }
+}
+
+/* =====================================================
+MENU MOBILE COM ANIMAÇÃO
+====================================================== */
+@media (max-width: 768px) {
+
+    /* Mostra o botão hambúrguer */
+    .menu-btn {
+        display: block;
+    }
+
+    /* Ajusta o nav para colocar logo e botão lado a lado */
+    nav {
+        justify-content: space-between;
+        position: relative;
+        /* Para segurar o menu dropdown */
+    }
+
+    /* Estilo do menu suspenso (escondido por defeito) */
+    .nav-links {
+        position: absolute;
+        top: 75px;
+        /* Altura onde o menu vai surgir */
+        left: 0;
+        width: 100%;
+        background: var(--header);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        gap: 20px;
+        z-index: 1000;
+
+        /* Animação suave (Fade e Deslizar) */
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-15px);
+        transition: all 0.4s ease;
+    }
+
+    /* Classe .open que o JavaScript adiciona */
+    .nav-links.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 }
 

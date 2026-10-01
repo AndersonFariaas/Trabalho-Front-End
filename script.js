@@ -24,12 +24,20 @@ const menuBtn = document.getElementById("menuBtn");
 
 menuBtn.addEventListener("click", () => {
     navLinks.classList.toggle("open");
+
+    // Troca o ícone dependendo se está aberto ou fechado
+    if (navLinks.classList.contains("open")) {
+        menuBtn.innerHTML = "✕";
+    } else {
+        menuBtn.innerHTML = "☰";
+    }
 });
 
-/* Fecha menu ao clicar em um link */
+/* Fecha o menu ao clicar em qualquer link e restaura o ícone */
 document.querySelectorAll(".nav-links a").forEach(link => {
     link.addEventListener("click", () => {
         navLinks.classList.remove("open");
+        menuBtn.innerHTML = "☰"; // Volta para o hambúrguer
     });
 });
 
