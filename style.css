@@ -406,7 +406,7 @@ h2 {
    NEWSLETTER
 ====================================================== */
 .newsletter {
-    padding-bottom: 80px 20px;
+    padding-bottom: 80px;
     text-align: center;
     background: var(--card);
     color: var(--text);
