@@ -317,7 +317,8 @@ h2 {
     background: #0066ff;
     display: flex;
     align-items: flex-end;
-    padding: 0; /* Zerado para evitar a borda azul */
+    padding: 0;
+    /* Zerado para evitar a borda azul */
     color: white;
 }
 
@@ -405,7 +406,7 @@ h2 {
    NEWSLETTER
 ====================================================== */
 .newsletter {
-    padding: 80px 20px;
+    padding-bottom: 80px 20px;
     text-align: center;
     background: var(--card);
     color: var(--text);
@@ -546,26 +547,33 @@ footer {
 ====================================================== */
 
 @media (max-width: 900px) {
+
     .hero-inner,
     .about-grid {
         grid-template-columns: 1fr;
     }
+
     .product-grid,
     .modal-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
     h1 {
         font-size: 45px;
     }
+
     .about {
         padding: 65px 20px;
     }
+
     .about-grid {
         gap: 40px;
     }
+
     .about-art {
         min-height: 360px;
     }
+
     .about h2 {
         font-size: 34px;
     }
@@ -575,10 +583,12 @@ footer {
     .menu-btn {
         display: block;
     }
+
     nav {
         justify-content: space-between;
         position: relative;
     }
+
     .nav-links {
         position: absolute;
         top: 75px;
@@ -596,11 +606,13 @@ footer {
         transform: translateY(-15px);
         transition: all 0.4s ease;
     }
+
     .nav-links.open {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }
+
     .category-buttons .btn {
         flex: 1 1 calc(50% - 15px);
         max-width: none;
@@ -608,30 +620,38 @@ footer {
 }
 
 @media (max-width: 600px) {
+
     .product-grid,
     .modal-grid {
         grid-template-columns: 1fr;
     }
+
     .form,
     .buttons {
         flex-direction: column;
     }
+
     .about {
         padding: 50px 20px;
     }
+
     .about-art {
         min-height: 320px;
         border-radius: 15px;
     }
+
     .art-copy {
         padding: 25px;
     }
+
     .art-copy h3 {
         font-size: 26px;
     }
+
     .about h2 {
         font-size: 30px;
     }
+
     .about-text {
         font-size: 14px;
     }
