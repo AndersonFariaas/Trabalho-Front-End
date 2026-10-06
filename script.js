@@ -47,16 +47,18 @@ NEWSLETTER
 
 const newsletterForm = document.getElementById("newsletterForm");
 
-newsletterForm.addEventListener("submit", event => {
-    event.preventDefault();
+if (newsletterForm) {
+    newsletterForm.addEventListener("submit", event => {
+        event.preventDefault();
 
-    const email = document.getElementById("email").value.trim();
+        const email = document.getElementById("email").value.trim();
 
-    if (email) {
-        showToast("Inscrição confirmada! Bem-vindo às novidades do SENAI FIRJAN.");
-        newsletterForm.reset();
-    }
-});
+        if (email) {
+            showToast("Inscrição confirmada! Bem-vindo às novidades do SENAI FIRJAN.");
+            newsletterForm.reset();
+        }
+    });
+}
 
 /* =====================================================
 MODAIS DE PRODUTOS
@@ -101,13 +103,119 @@ botaoTema.addEventListener("click", function () {
     document.body.classList.toggle("modo-escuro");
 
     if (document.body.classList.contains("modo-escuro")) {
-
         botaoTema.textContent = "☀️";
-
     } else {
-
         botaoTema.textContent = "🌙";
-
     }
 
 });
+
+/* =====================================================
+INTEGRAÇÃO COM A API - PRODUTOS E CATEGORIAS
+====================================================== */
+const API_URL = "https://onlinestorage.you.tec.br/api/getkey/senai/produtos";
+
+async function carregarProdutos() {
+    try {
+        const resposta = await fetch(API_URL);
+        if (!resposta.ok) throw new Error("Erro de comunicação com a API");
+
+        const dadosRaw = await resposta.json();
+        let produtos = [];
+
+        // Verifica e trata o objeto JSON para extrair a lista com base na estrutura da sua base de dados
+        if (dadosRaw && dadosRaw.value) {
+            let valorTratado = dadosRaw.value;
+
+            // Se vier formatado como texto, converte primeiro
+            if (typeof valorTratado === 'string') {
+                try { valorTratado = JSON.parse(valorTratado); } catch (e) { }
+            }
+
+            // O nome do produto é a chave do objeto (ex: "PS5", "TECLADO")
+            if (typeof valorTratado === 'object' && !Array.isArray(valorTratado) && valorTratado !== null) {
+                produtos = Object.keys(valorTratado).map(nomeDaChave => {
+                    return {
+                        nome: nomeDaChave,
+                        preco: valorTratado[nomeDaChave].preco,
+                        imagem: valorTratado[nomeDaChave].imagem,
+                        // Se não existir a categoria no banco de dados, o fallback será a categoria 1
+                        categoria: valorTratado[nomeDaChave].categoria || 1
+                    };
+                });
+            } else if (Array.isArray(valorTratado)) {
+                produtos = valorTratado;
+            }
+        }
+
+        if (produtos.length > 0) {
+            renderizarNaTela(produtos);
+        } else {
+            exibirMensagemVazio("A loja ainda não possui produtos cadastrados.");
+        }
+
+    } catch (erro) {
+        console.error("ERRO AO LER OS PRODUTOS:", erro);
+        exibirMensagemVazio("Falha ao ler os produtos da API.");
+    }
+}
+
+function renderizarNaTela(produtos) {
+    // 1. Limpa todos os 9 grids antes de injetar os novos dados para evitar duplicação
+    for (let i = 1; i <= 9; i++) {
+        const containerGrid = document.getElementById(`grid-${i}`);
+        if (containerGrid) containerGrid.innerHTML = "";
+    }
+
+    // 2. Cria os cartões dinamicamente
+    produtos.forEach(produto => {
+        const card = document.createElement("article");
+        card.className = "product-card";
+
+        const nomeProduto = produto.nome || "Produto sem nome";
+        const precoProduto = produto.preco || 0;
+
+        // Imagem padrão caso o link venha vazio
+        const imagemProduto = produto.imagem || "https://via.placeholder.com/200?text=Sem+Imagem";
+
+        const precoFormatado = Number(precoProduto).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+        card.innerHTML = `
+            <div class="card-content">
+                <img src="${imagemProduto}" alt="${nomeProduto}" onerror="this.src='https://via.placeholder.com/200?text=Link+Incompatível'">
+                <h4>${nomeProduto}</h4>
+                <p>R$ ${precoFormatado}</p>
+            </div>
+        `;
+
+        // 3. Distribuição para os modais corretos
+        let idCategoria = produto.categoria || 1;
+        const gridDestino = document.getElementById(`grid-${idCategoria}`);
+
+        if (gridDestino) {
+            gridDestino.appendChild(card);
+        } else {
+            // Registo de segurança
+            document.getElementById("grid-1").appendChild(card);
+        }
+    });
+
+    // 4. Se alguma categoria ficou vazia (sem produtos), avisa o utilizador
+    exibirMensagemVazio("Em breve novos produtos nesta categoria!");
+}
+
+function exibirMensagemVazio(mensagem) {
+    for (let i = 1; i <= 9; i++) {
+        const containerGrid = document.getElementById(`grid-${i}`);
+        // Substitui apenas se a grid estiver vazia ou presa no ecrã de "A carregar..."
+        if (containerGrid && (containerGrid.innerHTML.trim() === "" || containerGrid.innerHTML.includes("A carregar"))) {
+            containerGrid.innerHTML = `<p class="loading-text">${mensagem}</p>`;
+        }
+    }
+}
+
+// Inicia o processo quando a página abre
+document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+// Continua a atualizar automaticamente a cada 30 segundos
+setInterval(carregarProdutos, 30000);

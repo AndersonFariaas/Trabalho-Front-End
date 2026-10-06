@@ -20,28 +20,21 @@
 
     <!-- HEADER -->
     <header>
-
         <nav>
             <a href="https://www.firjan.com.br/senai/" class="logo">
                 <img class="logo-firjan" src="FirjanSENAI.png" alt="ImagemLogo">
             </a>
 
-            <!-- Agrupamos os links e o botão de tema na mesma DIV -->
             <div class="nav-links" id="navLinks">
                 <a href="#produtos" class="nav-link">Produtos</a>
                 <a href="#sobre" class="nav-link">Sobre Nós</a>
                 <a href="#contato" class="nav-link">Contato</a>
 
-                <!-- BOTÃO DE TEMA AQUI DENTRO -->
-                <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">
-                    🌙
-                </button>
+                <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">🌙</button>
             </div>
 
             <div class="nav-actions">
-                <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">
-                    ☰
-                </button>
+                <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
             </div>
         </nav>
     </header>
@@ -65,7 +58,7 @@
                     </div>
                 </div>
 
-                <!-- ÁREA DE DESTAQUE VAZIA -->
+                <!-- ÁREA DE DESTAQUE -->
                 <div class="product-stage">
                     <div class="empty-stage-text">
                         [Área reservada para o grupo adicionar um produto em destaque]
@@ -110,196 +103,111 @@
             </div>
         </section>
 
-        <!-- ESTRUTURA DOS MODAIS (Pode ficar aqui ou no final do body) -->
-
-        <!-- MODAL 1 -->
+        <!-- MODAIS DA API -->
         <div class="modal-overlay" id="modal-1">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Tecnologia e computadores</h3>
                     <button class="close-btn" onclick="closeModal('modal-1')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
-                    <article class="product-card empty-card"><span>[Card 9]</span></article>
-                    <article class="product-card empty-card"><span>[Card 10]</span></article>
+                <div class="modal-grid" id="grid-1">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 2 -->
         <div class="modal-overlay" id="modal-2">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Celulares e dispositivos</h3>
                     <button class="close-btn" onclick="closeModal('modal-2')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-2">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 3 -->
         <div class="modal-overlay" id="modal-3">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Escritório e conforto</h3>
                     <button class="close-btn" onclick="closeModal('modal-3')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-3">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 4 -->
         <div class="modal-overlay" id="modal-4">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Moda e acessórios</h3>
                     <button class="close-btn" onclick="closeModal('modal-4')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-4">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 5 -->
         <div class="modal-overlay" id="modal-5">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Veículos e mobilidade</h3>
                     <button class="close-btn" onclick="closeModal('modal-5')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-5">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 6 -->
         <div class="modal-overlay" id="modal-6">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Casa e utilidades</h3>
                     <button class="close-btn" onclick="closeModal('modal-6')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-6">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 7 -->
         <div class="modal-overlay" id="modal-7">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Alimentos e bebidas</h3>
                     <button class="close-btn" onclick="closeModal('modal-7')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-7">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 8 -->
         <div class="modal-overlay" id="modal-8">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Cultura, Colecionáveis e Ficção</h3>
                     <button class="close-btn" onclick="closeModal('modal-8')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-8">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL 9 -->
         <div class="modal-overlay" id="modal-9">
             <div class="modal-container">
                 <div class="modal-header">
                     <h3>Curiosidades, Itens Especiais</h3>
                     <button class="close-btn" onclick="closeModal('modal-9')" aria-label="Fechar">&times;</button>
                 </div>
-                <!-- GRID COM 4 COLUNAS -->
-                <div class="modal-grid">
-                    <article class="product-card empty-card"><span>[Card 1]</span></article>
-                    <article class="product-card empty-card"><span>[Card 2]</span></article>
-                    <article class="product-card empty-card"><span>[Card 3]</span></article>
-                    <article class="product-card empty-card"><span>[Card 4]</span></article>
-                    <article class="product-card empty-card"><span>[Card 5]</span></article>
-                    <article class="product-card empty-card"><span>[Card 6]</span></article>
-                    <article class="product-card empty-card"><span>[Card 7]</span></article>
-                    <article class="product-card empty-card"><span>[Card 8]</span></article>
+                <div class="modal-grid" id="grid-9">
+                    <p class="loading-text">A carregar produtos da API...</p>
                 </div>
             </div>
         </div>
@@ -309,12 +217,10 @@
             <div class="container about-grid">
                 <div class="about-art">
                     <div class="art-copy">
-
                         <h3>
                             Transformando a indústria do
                             <span style="color: #4285F4; font-size: inherit;">Rio de Janeiro</span>
                         </h3>
-
                     </div>
                 </div>
 
