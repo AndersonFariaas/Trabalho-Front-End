@@ -5,8 +5,8 @@
     --card: #f5f5f5;
     --border: #dddddd;
     --header: #ffffff;
-    --blue: #0066ff;
-    --blue-dark: #0047b3;
+    --blue: #12bae8;
+    --blue-dark: #12bae8;
 }
 
 body.modo-escuro {
@@ -47,7 +47,7 @@ a {
    BARRA DE PROMOÇÃO
 ====================================================== */
 .announcement {
-    background: #0066ff;
+    background: var(--blue);
     color: white;
     text-align: center;
     padding: 10px;
@@ -67,7 +67,7 @@ header {
 nav {
     max-width: 1200px;
     margin: auto;
-    padding: 20px;
+    padding: 10px 1px;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -78,12 +78,19 @@ nav {
     text-decoration: none;
     font-size: 22px;
     font-weight: bold;
+    position: relative;
+    left: 60px;
+    margin-top: -40px;
+    margin-bottom: -65px;
+    font-size: 30px !important;
 }
 
 .nav-links {
+    font-weight: bolder;
     display: flex;
     gap: 25px;
     margin-left: auto;
+    position: relative;
 }
 
 .nav-links a {
@@ -145,7 +152,7 @@ h2 {
 .eyebrow {
     color: var(--blue);
     font-weight: bold;
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 15px;
     letter-spacing: 0;
 }
@@ -186,6 +193,13 @@ h2 {
 .hero {
     padding: 80px 20px;
     transition: 0.6s;
+    position: relative;
+    background:
+        radial-gradient(circle at 80% 30%, rgba(0, 102, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 10% 80%, rgba(0, 180, 255, 0.08), transparent 25%),
+        linear-gradient(135deg, #ffffff, #f3f8ff);
+
+    overflow: hidden;
 }
 
 .hero-inner {
@@ -661,4 +675,42 @@ footer {
     .category-buttons .btn {
         flex: 1 1 100%;
     }
+}
+
+.logo-firjan {
+    width: 200px;
+    position: relative;
+}
+
+.btn.btn-theme {
+    position: relative;
+    top: -7px;
+    left: 10px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(rgba(0, 100, 200, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 100, 200, 0.05) 1px, transparent 1px);
+
+    background-size: 40px 40px;
+
+    pointer-events: none;
+}
+
+body.modo-escuro .hero {
+    background:
+        radial-gradient(circle at 80% 30%, rgba(0, 140, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 10% 80%, rgba(0, 200, 255, 0.10), transparent 25%),
+        linear-gradient(135deg, #07111f, #0d1b2a);
+}
+
+body.modo-escuro .hero::before {
+    background-image:
+        linear-gradient(rgba(80, 180, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80, 180, 255, 0.06) 1px, transparent 1px);
 }

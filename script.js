@@ -102,11 +102,11 @@ botaoTema.addEventListener("click", function () {
 
     if (document.body.classList.contains("modo-escuro")) {
 
-        botaoTema.textContent = "☀️ Modo Claro";
+        botaoTema.textContent = "☀️";
 
     } else {
 
-        botaoTema.textContent = "🌙 Modo Escuro";
+        botaoTema.textContent = "🌙";
 
     }
 
