@@ -106,7 +106,7 @@ nav {
 #botaoTema {
     border: none;
     padding: 10px 15px;
-    border-radius: 8px;
+    border-radius: 50px;
     background: var(--text);
     color: var(--bg);
     cursor: pointer;
