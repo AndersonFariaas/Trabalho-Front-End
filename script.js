@@ -184,7 +184,7 @@ function renderizarNaTela(produtos) {
             <div class="card-content">
                 <img src="${imagemProduto}" alt="${nomeProduto}" onerror="this.src='https://via.placeholder.com/200?text=Link+Incompatível'">
                 <h4>${nomeProduto}</h4>
-                <p>R$ ${precoFormatado}</p>
+                <p>¢ ${precoFormatado}</p>
             </div>
         `;
 
