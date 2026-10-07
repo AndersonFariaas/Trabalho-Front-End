@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Produtos e Soluções SENAI FIRJAN.">
-    <title>SENAI - Shop</title>
+    <title>SENAI - Shop Tech</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/jpg" href="firjan.jpg">
 </head>
@@ -15,7 +15,7 @@
 
     <!-- BARRA DE PROMOÇÃO -->
     <div class="announcement">
-        INOVAÇÃO E TECNOLOGIA PARA A INDÚSTRIA · FIRJAN SENAI
+        🚀 INOVAÇÃO E TECNOLOGIA PARA A INDÚSTRIA · FIRJAN SENAI
     </div>
 
     <!-- HEADER -->
@@ -46,22 +46,28 @@
         <section class="hero">
             <div class="hero-inner">
                 <div>
-                    <div class="eyebrow">Tecnologia · Educação · Indústria</div>
-                    <h1>Soluções do<br>Futuro, Hoje.</h1>
+                    <div class="eyebrow">⚡ Tecnologia · Educação · Indústria</div>
+                    <h1>Soluções do<br><span>Futuro, Hoje.</span></h1>
                     <p class="hero-copy">
                         Descubra o portfólio de produtos e projetos desenvolvidos pelos alunos e profissionais do SENAI
                         FIRJAN. Inovação que transforma a indústria.
                     </p>
                     <div class="buttons">
-                        <a class="btn btn-primary" href="#produtos">Ver Produtos</a>
+                        <a class="btn btn-primary" href="#produtos">Explorar Catálogo</a>
                         <a class="btn btn-secondary" href="#sobre">Conhecer o SENAI</a>
                     </div>
                 </div>
 
-                <!-- ÁREA DE DESTAQUE -->
+                <!-- ÁREA DE DESTAQUE COM CARROSSEL -->
                 <div class="product-stage">
-                    <div class="empty-stage-text">
-                        [Área reservada para o grupo adicionar um produto em destaque]
+                    <div class="carousel-container" id="heroCarousel">
+                        <div class="carousel-track" id="carouselTrack">
+                            <!-- Os slides do carrossel entram via JS dinamicamente -->
+                            <div class="carousel-slide active">
+                                <div class="empty-stage-text">Carregando destaques da API...</div>
+                            </div>
+                        </div>
+                        <div class="carousel-indicators" id="carouselIndicators"></div>
                     </div>
                 </div>
             </div>
@@ -70,10 +76,10 @@
         <!-- BENEFÍCIOS -->
         <div class="trust">
             <div class="trust-inner">
-                <span>Inovação Tecnológica</span>
-                <span>Foco na Indústria</span>
-                <span>Qualidade SENAI</span>
-                <span>Desenvolvimento Sustentável</span>
+                <span>⚡ Inovação Tecnológica</span>
+                <span>🏭 Foco na Indústria</span>
+                <span>🎓 Qualidade SENAI</span>
+                <span>🌱 Sustentabilidade</span>
             </div>
         </div>
 
@@ -81,24 +87,22 @@
         <section class="products" id="produtos">
             <div class="container">
                 <div class="section-head">
-                    <div class="eyebrow">Catálogo</div>
+                    <div class="eyebrow">Catálogo Digital</div>
                     <h2>Nossos Produtos</h2>
-                    <p>Selecione uma categoria abaixo para abrir o catálogo de produtos.</p>
+                    <p>Selecione uma categoria abaixo para abrir o catálogo completo de produtos.</p>
                 </div>
 
                 <!-- BOTÕES PARA ABRIR OS MODAIS -->
                 <div class="category-buttons">
-                    <button class="btn btn-primary" onclick="openModal('modal-1')">Tecnologia e computadores</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-2')">Celulares e dispositivos</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-3')">Escritório e conforto</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-4')">Moda e acessórios</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-5')">Veículos e mobilidade</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-6')">Casa e utilidades</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-7')">Alimentos e bebidas</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-8')">Cultura, Colecionáveis e
-                        Ficção</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-9')">Curiosidades, Itens
-                        Especiais</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-1')">💻 Tecnologia e computadores</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-2')">📱 Celulares e dispositivos</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-3')">🪑 Escritório e conforto</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-4')">👕 Moda e acessórios</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-5')">🚗 Veículos e mobilidade</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-6')">🏠 Casa e utilidades</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-7')">🍔 Alimentos e bebidas</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-8')">🎮 Cultura e Colecionáveis</button>
+                    <button class="btn btn-primary" onclick="openModal('modal-9')">✨ Itens Especiais</button>
                 </div>
             </div>
         </section>
@@ -237,27 +241,19 @@
                         inovação e ao desenvolvimento da indústria. Com uma atuação próxima às empresas e às
                         necessidades do mercado, oferece formação e capacitação para preparar profissionais para os
                         desafios de um setor industrial cada vez mais tecnológico e competitivo.
-
-                        No Rio de Janeiro, o SENAI contribui para o fortalecimento da indústria por meio de cursos,
-                        serviços tecnológicos, pesquisa e inovação. A instituição conecta conhecimento, tecnologia e
-                        pessoas, ajudando empresas a aumentar sua produtividade e preparando profissionais para
-                        construir novas oportunidades.
-
-                        Mais do que formar profissionais, o SENAI transforma conhecimento em soluções e contribui para o
-                        desenvolvimento da indústria e da sociedade.
                     </p>
 
                     <div class="benefits">
                         <div class="benefit">
-                            <span class="check">🌐</span>
+                            <span class="check">✓</span>
                             <span>Projetos focados na necessidade do mercado</span>
                         </div>
                         <div class="benefit">
-                            <span class="check">🌐</span>
+                            <span class="check">✓</span>
                             <span>Alta tecnologia aplicada</span>
                         </div>
                         <div class="benefit">
-                            <span class="check">🌐</span>
+                            <span class="check">✓</span>
                             <span>Feito por profissionais capacitados</span>
                         </div>
                     </div>

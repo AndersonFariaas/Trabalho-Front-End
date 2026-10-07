@@ -1,7 +1,6 @@
 /* =====================================================
 TOAST
 ====================================================== */
-
 const toast = document.getElementById("toast");
 
 function showToast(message) {
@@ -18,41 +17,30 @@ function showToast(message) {
 /* =====================================================
 MENU MOBILE
 ====================================================== */
-
 const navLinks = document.getElementById("navLinks");
 const menuBtn = document.getElementById("menuBtn");
 
 menuBtn.addEventListener("click", () => {
     navLinks.classList.toggle("open");
-
-    // Troca o ícone dependendo se está aberto ou fechado
-    if (navLinks.classList.contains("open")) {
-        menuBtn.innerHTML = "✕";
-    } else {
-        menuBtn.innerHTML = "☰";
-    }
+    menuBtn.innerHTML = navLinks.classList.contains("open") ? "✕" : "☰";
 });
 
-/* Fecha o menu ao clicar em qualquer link e restaura o ícone */
 document.querySelectorAll(".nav-links a").forEach(link => {
     link.addEventListener("click", () => {
         navLinks.classList.remove("open");
-        menuBtn.innerHTML = "☰"; // Volta para o hambúrguer
+        menuBtn.innerHTML = "☰";
     });
 });
 
 /* =====================================================
 NEWSLETTER
 ====================================================== */
-
 const newsletterForm = document.getElementById("newsletterForm");
 
 if (newsletterForm) {
     newsletterForm.addEventListener("submit", event => {
         event.preventDefault();
-
         const email = document.getElementById("email").value.trim();
-
         if (email) {
             showToast("Inscrição confirmada! Bem-vindo às novidades do SENAI FIRJAN.");
             newsletterForm.reset();
@@ -63,12 +51,10 @@ if (newsletterForm) {
 /* =====================================================
 MODAIS DE PRODUTOS
 ====================================================== */
-
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.add('active');
-        // Impede a página por trás de rolar enquanto o modal está aberto
         document.body.style.overflow = 'hidden';
     }
 }
@@ -77,12 +63,10 @@ function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('active');
-        // Restaura a rolagem da página
         document.body.style.overflow = 'auto';
     }
 }
 
-// Fechar o modal ao clicar fora da caixa branca (no fundo escuro)
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', function (e) {
         if (e.target === this) {
@@ -93,22 +77,77 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 /* =====================================================
-CLARO E ESCURO
+MODO CLARO E ESCURO
 ====================================================== */
-
 const botaoTema = document.getElementById("botaoTema");
 
 botaoTema.addEventListener("click", function () {
-
     document.body.classList.toggle("modo-escuro");
-
-    if (document.body.classList.contains("modo-escuro")) {
-        botaoTema.textContent = "☀️";
-    } else {
-        botaoTema.textContent = "🌙";
-    }
-
+    botaoTema.textContent = document.body.classList.contains("modo-escuro") ? "☀️" : "🌙";
 });
+
+/* =====================================================
+CARROSSEL DE DESTAQUES NA HERO
+====================================================== */
+let carouselInterval;
+
+function iniciarCarrosselDestaques(produtosDestaque) {
+    const track = document.getElementById("carouselTrack");
+    const indicatorsContainer = document.getElementById("carouselIndicators");
+
+    if (!track || !indicatorsContainer || produtosDestaque.length === 0) return;
+
+    track.innerHTML = "";
+    indicatorsContainer.innerHTML = "";
+
+    // Pega até 5 produtos aleatórios ou os primeiros para o carrossel
+    const destaques = produtosDestaque.slice(0, 5);
+
+    destaques.forEach((prod, index) => {
+        const precoFmt = Number(prod.preco || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        const imgUrl = prod.imagem || "https://via.placeholder.com/200?text=Sem+Imagem";
+
+        // Cria o slide
+        const slide = document.createElement("div");
+        slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+        slide.innerHTML = `
+            <img src="${imgUrl}" alt="${prod.nome}" onerror="this.src='https://via.placeholder.com/200?text=Indisponível'">
+            <div>
+                <h4>${prod.nome}</h4>
+                <p>R$ ${precoFmt}</p>
+            </div>
+        `;
+        track.appendChild(slide);
+
+        // Cria a bolinha indicadora
+        const indicator = document.createElement("div");
+        indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+        indicator.addEventListener("click", () => mudarSlide(index));
+        indicatorsContainer.appendChild(indicator);
+    });
+
+    // Inicia rotação automática a cada 4 segundos
+    let currentSlide = 0;
+    clearInterval(carouselInterval);
+
+    carouselInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % destaques.length;
+        mudarSlide(currentSlide);
+    }, 4000);
+}
+
+function mudarSlide(index) {
+    const slides = document.querySelectorAll(".carousel-slide");
+    const indicators = document.querySelectorAll(".indicator");
+
+    slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+    });
+
+    indicators.forEach((ind, i) => {
+        ind.classList.toggle("active", i === index);
+    });
+}
 
 /* =====================================================
 INTEGRAÇÃO COM A API - PRODUTOS E CATEGORIAS
@@ -123,23 +162,19 @@ async function carregarProdutos() {
         const dadosRaw = await resposta.json();
         let produtos = [];
 
-        // Verifica e trata o objeto JSON para extrair a lista com base na estrutura da sua base de dados
         if (dadosRaw && dadosRaw.value) {
             let valorTratado = dadosRaw.value;
 
-            // Se vier formatado como texto, converte primeiro
             if (typeof valorTratado === 'string') {
                 try { valorTratado = JSON.parse(valorTratado); } catch (e) { }
             }
 
-            // O nome do produto é a chave do objeto (ex: "PS5", "TECLADO")
             if (typeof valorTratado === 'object' && !Array.isArray(valorTratado) && valorTratado !== null) {
                 produtos = Object.keys(valorTratado).map(nomeDaChave => {
                     return {
                         nome: nomeDaChave,
                         preco: valorTratado[nomeDaChave].preco,
                         imagem: valorTratado[nomeDaChave].imagem,
-                        // Se não existir a categoria no banco de dados, o fallback será a categoria 1
                         categoria: valorTratado[nomeDaChave].categoria || 1
                     };
                 });
@@ -150,6 +185,7 @@ async function carregarProdutos() {
 
         if (produtos.length > 0) {
             renderizarNaTela(produtos);
+            iniciarCarrosselDestaques(produtos);
         } else {
             exibirMensagemVazio("A loja ainda não possui produtos cadastrados.");
         }
@@ -165,54 +201,45 @@ function comprarProduto(nomeProduto) {
 }
 
 function renderizarNaTela(produtos) {
-    // 1. Limpa todos os 9 grids antes de injetar os novos dados para evitar duplicação
     for (let i = 1; i <= 9; i++) {
         const containerGrid = document.getElementById(`grid-${i}`);
         if (containerGrid) containerGrid.innerHTML = "";
     }
 
-    // 2. Cria os cartões dinamicamente
     produtos.forEach(produto => {
         const card = document.createElement("article");
         card.className = "product-card";
 
         const nomeProduto = produto.nome || "Produto sem nome";
         const precoProduto = produto.preco || 0;
-
-        // Imagem padrão caso o link venha vazio
         const imagemProduto = produto.imagem || "https://via.placeholder.com/200?text=Sem+Imagem";
-
         const precoFormatado = Number(precoProduto).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
         card.innerHTML = `
             <div class="card-content">
                 <img src="${imagemProduto}" alt="${nomeProduto}" onerror="this.src='https://via.placeholder.com/200?text=Link+Incompatível'">
                 <h4>${nomeProduto}</h4>
-                <p>¢ ${precoFormatado}</p>
-                <button class="btn btn-primary btn-comprar" onclick="comprarProduto('${nomeProduto.replace(/'/g, "\\'")}')">Comprar</button>
+                <p>R$ ${precoFormatado}</p>
+                <button class="btn-comprar" onclick="comprarProduto('${nomeProduto.replace(/'/g, "\\'")}')">Comprar</button>
             </div>
         `;
 
-        // 3. Distribuição para os modais corretos
         let idCategoria = produto.categoria || 1;
         const gridDestino = document.getElementById(`grid-${idCategoria}`);
 
         if (gridDestino) {
             gridDestino.appendChild(card);
         } else {
-            // Registo de segurança
             document.getElementById("grid-1").appendChild(card);
         }
     });
 
-    // 4. Se alguma categoria ficou vazia (sem produtos), avisa o utilizador
     exibirMensagemVazio("Em breve novos produtos nesta categoria!");
 }
 
 function exibirMensagemVazio(mensagem) {
     for (let i = 1; i <= 9; i++) {
         const containerGrid = document.getElementById(`grid-${i}`);
-        // Substitui apenas se a grid estiver vazia ou presa no ecrã de "A carregar..."
         if (containerGrid && (containerGrid.innerHTML.trim() === "" || containerGrid.innerHTML.includes("A carregar"))) {
             containerGrid.innerHTML = `<p class="loading-text">${mensagem}</p>`;
         }
@@ -222,5 +249,5 @@ function exibirMensagemVazio(mensagem) {
 // Inicia o processo quando a página abre
 document.addEventListener("DOMContentLoaded", carregarProdutos);
 
-// Continua a atualizar automaticamente a cada 30 segundos
+// Atualiza automaticamente a cada 30 segundos
 setInterval(carregarProdutos, 30000);
