@@ -773,3 +773,21 @@ body.modo-escuro .hero::before {
         linear-gradient(rgba(80, 180, 255, 0.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(80, 180, 255, 0.06) 1px, transparent 1px);
 }
+
+/* =====================================================
+   BOTÃO DE COMPRA NOS PRODUTOS
+====================================================== */
+.btn-comprar {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-comprar:hover {
+    background-color: var(--blue-dark);
+    transform: translateY(-2px);
+}

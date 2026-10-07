@@ -160,6 +160,10 @@ async function carregarProdutos() {
     }
 }
 
+function comprarProduto(nomeProduto) {
+    showToast(`Compra realizada com sucesso para: ${nomeProduto}!`);
+}
+
 function renderizarNaTela(produtos) {
     // 1. Limpa todos os 9 grids antes de injetar os novos dados para evitar duplicação
     for (let i = 1; i <= 9; i++) {
@@ -185,6 +189,7 @@ function renderizarNaTela(produtos) {
                 <img src="${imagemProduto}" alt="${nomeProduto}" onerror="this.src='https://via.placeholder.com/200?text=Link+Incompatível'">
                 <h4>${nomeProduto}</h4>
                 <p>¢ ${precoFormatado}</p>
+                <button class="btn btn-primary btn-comprar" onclick="comprarProduto('${nomeProduto.replace(/'/g, "\\'")}')">Comprar</button>
             </div>
         `;
 
