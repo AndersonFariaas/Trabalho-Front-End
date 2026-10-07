@@ -11,7 +11,7 @@
     <link rel="icon" type="image/jpg" href="firjan.jpg">
 </head>
 
-<body>
+<body class="modo-escuro"> <!-- Modo escuro como padrão -->
 
     <!-- BARRA DE PROMOÇÃO -->
     <div class="announcement">
@@ -30,7 +30,7 @@
                 <a href="#sobre" class="nav-link">Sobre Nós</a>
                 <a href="#contato" class="nav-link">Contato</a>
 
-                <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">🌙</button>
+                <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">☀️</button>
             </div>
 
             <div class="nav-actions">
@@ -62,7 +62,6 @@
                 <div class="product-stage">
                     <div class="carousel-container" id="heroCarousel">
                         <div class="carousel-track" id="carouselTrack">
-                            <!-- Os slides do carrossel entram via JS dinamicamente -->
                             <div class="carousel-slide active">
                                 <div class="empty-stage-text">Carregando destaques da API...</div>
                             </div>
@@ -92,7 +91,6 @@
                     <p>Selecione uma categoria abaixo para abrir o catálogo completo de produtos.</p>
                 </div>
 
-                <!-- BOTÕES PARA ABRIR OS MODAIS -->
                 <div class="category-buttons">
                     <button class="btn btn-primary" onclick="openModal('modal-1')">💻 Tecnologia e computadores</button>
                     <button class="btn btn-primary" onclick="openModal('modal-2')">📱 Celulares e dispositivos</button>
