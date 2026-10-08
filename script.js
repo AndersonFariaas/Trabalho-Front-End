@@ -196,10 +196,6 @@ async function carregarProdutos() {
     }
 }
 
-function comprarProduto(nomeProduto) {
-    showToast(`Compra realizada com sucesso para: ${nomeProduto}!`);
-}
-
 function renderizarNaTela(produtos) {
     for (let i = 1; i <= 9; i++) {
         const containerGrid = document.getElementById(`grid-${i}`);
@@ -251,3 +247,163 @@ document.addEventListener("DOMContentLoaded", carregarProdutos);
 
 // Atualiza automaticamente a cada 30 segundos
 setInterval(carregarProdutos, 30000);
+
+/* =====================================================
+   SISTEMA DE BANCO DE DADOS (Simulado com LocalStorage) E PERFIL
+====================================================== */
+// Tenta carregar o usuário atual e o banco de dados geral do navegador
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+let usersDB = JSON.parse(localStorage.getItem('usersDB')) || {};
+let isLoginMode = true; // Define se a tela inicial é Login ou Registro
+
+// Elementos da Interface
+const authArea = document.getElementById('auth-area');
+const authForm = document.getElementById('auth-form');
+const authTitle = document.getElementById('auth-title');
+const authSubmitBtn = document.getElementById('auth-submit-btn');
+const authToggleLink = document.getElementById('auth-toggle-link');
+const authSwitchText = document.getElementById('auth-switch-text');
+const usernameInput = document.getElementById('auth-username');
+const passwordInput = document.getElementById('auth-password');
+
+// Renderiza os botões dinamicamente no cabeçalho
+function renderAuthUI() {
+    if (!authArea) return;
+    if (currentUser) {
+        authArea.innerHTML = `
+            <span style="font-weight: 700; color: var(--blue); font-size: 14px;">Olá, ${currentUser.username}</span>
+            <button class="btn btn-primary" onclick="verPerfil()" style="padding: 6px 12px; font-size: 13px;">Meu Perfil</button>
+            <button class="btn btn-secondary" onclick="logout()" style="padding: 6px 12px; font-size: 13px;">Sair</button>
+        `;
+    } else {
+        authArea.innerHTML = `
+            <button class="btn btn-secondary" onclick="abrirAuth('login')" style="padding: 6px 12px; font-size: 13px;">Login</button>
+            <button class="btn btn-primary" onclick="abrirAuth('register')" style="padding: 6px 12px; font-size: 13px;">Registrar</button>
+        `;
+    }
+}
+
+// Abre o modal de Login ou Registro
+function abrirAuth(mode) {
+    isLoginMode = mode === 'login';
+    atualizarTextosAuth();
+    usernameInput.value = '';
+    passwordInput.value = '';
+    openModal('auth-modal');
+}
+
+// Alterna os textos entre Login e Registro
+function atualizarTextosAuth() {
+    if (isLoginMode) {
+        authTitle.innerText = "Login do Aluno";
+        authSubmitBtn.innerText = "Entrar";
+        authSwitchText.innerText = "Não tem conta?";
+        authToggleLink.innerText = "Registre-se";
+    } else {
+        authTitle.innerText = "Criar Perfil";
+        authSubmitBtn.innerText = "Cadastrar";
+        authSwitchText.innerText = "Já possui perfil?";
+        authToggleLink.innerText = "Faça Login";
+    }
+}
+
+// Alternar entre tela de Login e Registro clicando no link
+if(authToggleLink) {
+    authToggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        isLoginMode = !isLoginMode;
+        atualizarTextosAuth();
+    });
+}
+
+// Lógica de envio do formulário (Autenticação e Criação de Conta)
+if(authForm) {
+    authForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const user = usernameInput.value.trim();
+        const pass = passwordInput.value.trim();
+
+        if (isLoginMode) {
+            // Verifica Login
+            if (usersDB[user] && usersDB[user].password === pass) {
+                currentUser = usersDB[user];
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showToast(`Bem-vindo de volta, ${user}!`);
+                closeModal('auth-modal');
+                renderAuthUI();
+            } else {
+                showToast("Usuário ou senha incorretos!");
+            }
+        } else {
+            // Cria Registro
+            if (usersDB[user]) {
+                showToast("Esse usuário já está em uso!");
+            } else {
+                // Cria o usuário com um array vazio de compras
+                usersDB[user] = { username: user, password: pass, compras: [] };
+                localStorage.setItem('usersDB', JSON.stringify(usersDB));
+                
+                // Faz o login automático após o registro
+                currentUser = usersDB[user];
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showToast("Perfil criado com sucesso!");
+                closeModal('auth-modal');
+                renderAuthUI();
+            }
+        }
+    });
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    showToast("Você saiu da conta.");
+    renderAuthUI();
+}
+
+// Exibe o modal com o perfil e os produtos do usuário
+function verPerfil() {
+    if (!currentUser) return;
+    const perfilConteudo = document.getElementById('perfil-conteudo');
+    
+    let html = `<p style="margin-bottom: 20px; font-size: 16px;"><strong>Usuário Logado:</strong> <span style="color: var(--blue);">${currentUser.username}</span></p>`;
+    html += `<h4 style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Produtos Adquiridos:</h4>`;
+    
+    if (currentUser.compras && currentUser.compras.length > 0) {
+        html += `<ul style="list-style: none; padding: 0;">`;
+        // Inverte o array para mostrar as compras mais recentes primeiro
+        [...currentUser.compras].reverse().forEach(compra => {
+            html += `<li style="margin-bottom: 10px; padding: 10px; background: var(--bg); border-radius: 8px; border: 1px solid var(--border);">🛒 ${compra}</li>`;
+        });
+        html += `</ul>`;
+    } else {
+        html += `<p style="color: var(--secondary-text); font-style: italic;">Você ainda não possui produtos salvos no seu perfil.</p>`;
+    }
+    
+    perfilConteudo.innerHTML = html;
+    openModal('perfil-modal');
+}
+
+/* SUBSTTUA SUA FUNÇÃO comprarProduto() ANTIGA POR ESSA NOVA: */
+window.comprarProduto = function(nomeProduto) {
+    if (!currentUser) {
+        showToast("Faça login ou registre-se para salvar o produto!");
+        abrirAuth('login');
+        return;
+    }
+
+    // Adiciona a compra no perfil do usuário
+    if (!currentUser.compras) currentUser.compras = [];
+    currentUser.compras.push(nomeProduto);
+    
+    // Atualiza o banco de dados e a sessão
+    usersDB[currentUser.username] = currentUser;
+    localStorage.setItem('usersDB', JSON.stringify(usersDB));
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+    showToast(`"${nomeProduto}" foi salvo no seu perfil!`);
+};
+
+// Inicia os botões do cabeçalho na abertura da página
+document.addEventListener("DOMContentLoaded", renderAuthUI);

@@ -30,6 +30,11 @@
                 <a href="#sobre" class="nav-link">Sobre Nós</a>
                 <a href="#contato" class="nav-link">Contato</a>
 
+                <!-- Área onde os botões de Login ou Nome do Usuário vão aparecer -->
+                <div id="auth-area" style="display: flex; gap: 10px; align-items: center; margin-left: 10px;">
+                    <!-- Preenchido automaticamente pelo JavaScript -->
+                </div>
+
                 <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">☀️</button>
             </div>
 
@@ -38,6 +43,39 @@
             </div>
         </nav>
     </header>
+
+    <!-- MODAL DE LOGIN / REGISTRO -->
+    <div class="modal-overlay" id="auth-modal">
+        <div class="modal-container" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 id="auth-title">Login do Aluno</h3>
+                <button class="close-btn" onclick="closeModal('auth-modal')" aria-label="Fechar">&times;</button>
+            </div>
+            <!-- Usamos flex-direction: column para empilhar os campos -->
+            <form id="auth-form" class="form" style="flex-direction: column; display: flex; gap: 15px; margin: 0;">
+                <input type="text" id="auth-username" placeholder="Nome de usuário (ex: joao.senai)" required>
+                <input type="password" id="auth-password" placeholder="Sua senha" required>
+                <button class="btn btn-primary" type="submit" id="auth-submit-btn" style="width: 100%;">Entrar</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--secondary-text);">
+                <span id="auth-switch-text">Não tem conta?</span>
+                <a href="#" id="auth-toggle-link" style="color: var(--blue); font-weight: bold;">Registre-se</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- MODAL DE PERFIL (CARRINHO) -->
+    <div class="modal-overlay" id="perfil-modal">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Meu Perfil SENAI</h3>
+                <button class="close-btn" onclick="closeModal('perfil-modal')" aria-label="Fechar">&times;</button>
+            </div>
+            <div id="perfil-conteudo">
+                <!-- O conteúdo (produtos comprados) será gerado pelo JS -->
+            </div>
+        </div>
+    </div>
 
     <!-- CONTEÚDO -->
     <main>
