@@ -91,7 +91,6 @@ nav {
 
 .logo-firjan {
     width: 120px;
-    /* Mantém o tamanho original da logo sem alterar o nav */
     max-height: none;
     object-fit: contain;
 }
@@ -338,6 +337,7 @@ h2 {
     border-bottom: 1px solid var(--border);
     padding: 30px 20px;
     background: var(--card);
+    animation: trustBgPulse 4s infinite ease-in-out;
 }
 
 .trust-inner {
@@ -353,6 +353,25 @@ h2 {
     color: var(--secondary-text);
     font-weight: 600;
     font-size: 15px;
+    display: inline-block;
+    /* Necessário para o transform (zoom) funcionar */
+    animation: trustPulse 4s infinite ease-in-out;
+}
+
+.trust span:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.trust span:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.trust span:nth-child(3) {
+    animation-delay: 2s;
+}
+
+.trust span:nth-child(4) {
+    animation-delay: 3s;
 }
 
 /* =====================================================
@@ -488,21 +507,22 @@ h2 {
 }
 
 .about-art {
-    min-height: 420px;
+    min-height: 315px;
     border-radius: 24px;
     overflow: hidden;
     box-shadow: var(--shadow);
     background: #030712;
+    display: flex;
 }
 
 .art-copy {
     width: 100%;
-    height: 100%;
-    padding: 40px;
+    padding: 30px;
     display: flex;
     align-items: flex-end;
+    box-sizing: border-box;
     background: linear-gradient(to top, rgba(3, 7, 18, 0.9), rgba(3, 7, 18, 0.2)), url("senai.jpg");
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -687,6 +707,40 @@ footer {
 /* =====================================================
    RESPONSIVIDADE
 ====================================================== */
+
+@keyframes trustBgPulse {
+    0% {
+        background-color: var(--card);
+    }
+
+    50% {
+        /* Usa o azul do tema com muita transparência (0.08) para um efeito sutil */
+        background-color: rgba(2, 132, 199, 0.08);
+    }
+
+    100% {
+        background-color: var(--card);
+    }
+}
+
+@keyframes trustPulse {
+    0% {
+        color: var(--secondary-text);
+    }
+
+    50% {
+        color: var(--blue);
+        text-shadow: 0 0 10px var(--blue);
+        /* Adiciona um leve brilho na cor do tema */
+        transform: scale(1.05);
+        /* Dá um levíssimo zoom no texto */
+    }
+
+    100% {
+        color: var(--secondary-text);
+    }
+}
+
 @media (max-width: 900px) {
 
     .hero-inner,
