@@ -1,17 +1,67 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 
 <head>
-    <meta name="author" content="Equipe Alfa SENAI">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Equipe Alfa SENAI">
     <meta name="description" content="Produtos e Soluções SENAI FIRJAN.">
+    <meta name="theme-color" content="#060a14">
+    <meta name="color-scheme" content="dark light">
     <title>SENAI - Shop Tech</title>
+
+    <!-- Aplica o tema salvo antes da renderização (evita "piscar" ao carregar) -->
+    <script>
+        try {
+            const temaSalvo = localStorage.getItem("tema");
+            if (temaSalvo === "light" || temaSalvo === "dark") {
+                document.documentElement.dataset.theme = temaSalvo;
+            }
+        } catch (erro) { /* localStorage indisponível: mantém o tema padrão */ }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://onlinestorage.you.tec.br">
+    <link rel="preconnect" href="https://ajxvnupqwicjdlpyflak.supabase.co">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/jpg" href="firjan.jpg">
+    <link rel="icon" type="image/jpeg" href="firjan.jpg">
+
+    <script src="script.js" defer></script>
 </head>
 
-<body class="modo-escuro"> <!-- Modo escuro como padrão -->
+<body>
+
+    <!-- ÍCONES (sprite SVG reutilizável) -->
+    <svg class="sprite" aria-hidden="true" focusable="false">
+        <symbol id="i-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+        </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+            <path d="M18 6 6 18M6 6l12 12" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+        </symbol>
+        <symbol id="i-check" viewBox="0 0 24 24">
+            <path d="M20 6 9 17l-5-5" />
+        </symbol>
+        <symbol id="i-cart" viewBox="0 0 24 24">
+            <circle cx="9" cy="20" r="1.5" />
+            <circle cx="18" cy="20" r="1.5" />
+            <path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H6" />
+        </symbol>
+    </svg>
+
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
     <!-- BARRA DE PROMOÇÃO -->
     <div class="announcement">
@@ -19,92 +69,69 @@
     </div>
 
     <!-- HEADER -->
-    <header>
-        <nav>
+    <header class="site-header">
+        <nav class="nav" aria-label="Navegação principal">
             <a href="https://www.firjan.com.br/senai/" class="logo">
-                <img class="logo-firjan" src="FirjanSENAI.png" alt="ImagemLogo">
+                <img class="logo__img" src="FirjanSENAI.png" alt="Firjan SENAI" width="360" height="360">
             </a>
 
-            <div class="nav-links" id="navLinks">
-                <a href="#produtos" class="nav-link">Produtos</a>
-                <a href="#sobre" class="nav-link">Sobre Nós</a>
-                <a href="#contato" class="nav-link">Contato</a>
+            <div class="nav__panel" id="navLinks">
+                <ul class="nav__links">
+                    <li><a href="#produtos" class="nav__link">Produtos</a></li>
+                    <li><a href="#sobre" class="nav__link">Sobre Nós</a></li>
+                    <li><a href="#contato" class="nav__link">Contato</a></li>
+                </ul>
 
-                <!-- Área onde os botões de Login ou Nome do Usuário vão aparecer -->
-                <div id="auth-area" style="display: flex; gap: 10px; align-items: center; margin-left: 10px;">
-                    <!-- Preenchido automaticamente pelo JavaScript -->
-                </div>
-
-                <button id="botaoTema" class="btn btn-theme" aria-label="Alternar tema">☀️</button>
+                <!-- Área onde os botões de Login ou Nome do Usuário aparecem (preenchida pelo JavaScript) -->
+                <div class="auth-area" id="auth-area"></div>
             </div>
 
-            <div class="nav-actions">
-                <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+            <div class="nav__actions">
+                <button id="botaoTema" class="icon-btn theme-toggle" type="button" aria-label="Alternar tema">
+                    <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun" /></svg>
+                    <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon" /></svg>
+                </button>
+                <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Abrir menu"
+                    aria-controls="navLinks" aria-expanded="false">
+                    <svg class="icon icon--menu" aria-hidden="true"><use href="#i-menu" /></svg>
+                    <svg class="icon icon--close" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
             </div>
         </nav>
     </header>
 
-    <!-- MODAL DE LOGIN / REGISTRO -->
-    <div class="modal-overlay" id="auth-modal">
-        <div class="modal-container" style="max-width: 400px;">
-            <div class="modal-header">
-                <h3 id="auth-title">Login do Aluno</h3>
-                <button class="close-btn" onclick="closeModal('auth-modal')" aria-label="Fechar">&times;</button>
-            </div>
-            <!-- Usamos flex-direction: column para empilhar os campos -->
-            <form id="auth-form" class="form" style="flex-direction: column; display: flex; gap: 15px; margin: 0;">
-                <input type="text" id="auth-username" placeholder="Nome de usuário (ex: joao.senai)" required>
-                <input type="password" id="auth-password" placeholder="Sua senha" required>
-                <button class="btn btn-primary" type="submit" id="auth-submit-btn" style="width: 100%;">Entrar</button>
-            </form>
-            <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--secondary-text);">
-                <span id="auth-switch-text">Não tem conta?</span>
-                <a href="#" id="auth-toggle-link" style="color: var(--blue); font-weight: bold;">Registre-se</a>
-            </p>
-        </div>
-    </div>
-
-    <!-- MODAL DE PERFIL (CARRINHO) -->
-    <div class="modal-overlay" id="perfil-modal">
-        <div class="modal-container" style="max-width: 500px;">
-            <div class="modal-header">
-                <h3>Meu Perfil SENAI</h3>
-                <button class="close-btn" onclick="closeModal('perfil-modal')" aria-label="Fechar">&times;</button>
-            </div>
-            <div id="perfil-conteudo">
-                <!-- O conteúdo (produtos comprados) será gerado pelo JS -->
-            </div>
-        </div>
-    </div>
-
     <!-- CONTEÚDO -->
-    <main>
+    <main id="conteudo">
 
         <!-- HERO -->
-        <section class="hero">
-            <div class="hero-inner">
-                <div>
-                    <div class="eyebrow">⚡ Tecnologia · Educação · Indústria</div>
-                    <h1>Soluções do<br><span>Futuro, Hoje.</span></h1>
-                    <p class="hero-copy">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero__inner container">
+                <div class="hero__content">
+                    <p class="eyebrow eyebrow--pill">⚡ Tecnologia · Educação · Indústria</p>
+                    <h1 id="hero-title">Soluções do<br><span class="text-gradient">Futuro, Hoje.</span></h1>
+                    <p class="hero__copy">
                         Descubra o portfólio de produtos e projetos desenvolvidos pelos alunos e profissionais do SENAI
                         FIRJAN. Inovação que transforma a indústria.
                     </p>
-                    <div class="buttons">
-                        <a class="btn btn-primary" href="#produtos">Explorar Catálogo</a>
-                        <a class="btn btn-secondary" href="#sobre">Conhecer o SENAI</a>
+                    <div class="hero__actions">
+                        <a class="btn btn--primary btn--lg" href="#produtos">
+                            Explorar Catálogo
+                            <svg class="icon" aria-hidden="true"><use href="#i-arrow" /></svg>
+                        </a>
+                        <a class="btn btn--ghost btn--lg" href="#sobre">Conhecer o SENAI</a>
                     </div>
                 </div>
 
                 <!-- ÁREA DE DESTAQUE COM CARROSSEL -->
                 <div class="product-stage">
-                    <div class="carousel-container" id="heroCarousel">
-                        <div class="carousel-track" id="carouselTrack">
-                            <div class="carousel-slide active">
-                                <div class="empty-stage-text">Carregando destaques da API...</div>
+                    <div class="carousel" id="heroCarousel" role="region" aria-roledescription="carrossel"
+                        aria-label="Produtos em destaque">
+                        <div class="carousel__track" id="carouselTrack">
+                            <div class="carousel__slide is-active">
+                                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>Carregando destaques da API...</p>
                             </div>
                         </div>
-                        <div class="carousel-indicators" id="carouselIndicators"></div>
+                        <div class="carousel__indicators" id="carouselIndicators"></div>
                     </div>
                 </div>
             </div>
@@ -112,217 +139,329 @@
 
         <!-- BENEFÍCIOS -->
         <div class="trust">
-            <div class="trust-inner">
-                <span>⚡ Inovação Tecnológica</span>
-                <span>🏭 Foco na Indústria</span>
-                <span>🎓 Qualidade SENAI</span>
-                <span>🌱 Sustentabilidade</span>
-            </div>
+            <ul class="trust__list container">
+                <li class="trust__item"><span aria-hidden="true">⚡</span> Inovação Tecnológica</li>
+                <li class="trust__item"><span aria-hidden="true">🏭</span> Foco na Indústria</li>
+                <li class="trust__item"><span aria-hidden="true">🎓</span> Qualidade SENAI</li>
+                <li class="trust__item"><span aria-hidden="true">🌱</span> Sustentabilidade</li>
+            </ul>
         </div>
 
         <!-- PRODUTOS -->
-        <section class="products" id="produtos">
+        <section class="section products" id="produtos" aria-labelledby="produtos-title">
             <div class="container">
                 <div class="section-head">
-                    <div class="eyebrow">Catálogo Digital</div>
-                    <h2>Nossos Produtos</h2>
+                    <p class="eyebrow">Catálogo Digital</p>
+                    <h2 id="produtos-title">Nossos Produtos</h2>
                     <p>Selecione uma categoria abaixo para abrir o catálogo completo de produtos.</p>
                 </div>
 
-                <div class="category-buttons">
-                    <button class="btn btn-primary" onclick="openModal('modal-1')">💻 Tecnologia e computadores</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-2')">📱 Celulares e dispositivos</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-3')">🪑 Escritório e conforto</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-4')">👕 Moda e acessórios</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-5')">🚗 Veículos e mobilidade</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-6')">🏠 Casa e utilidades</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-7')">🍔 Alimentos e bebidas</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-8')">🎮 Cultura e Colecionáveis</button>
-                    <button class="btn btn-primary" onclick="openModal('modal-9')">✨ Itens Especiais</button>
+                <div class="category-grid">
+                    <button class="category-card" type="button" data-open-modal="modal-1">
+                        <span class="category-card__icon" aria-hidden="true">💻</span>
+                        <span class="category-card__label">Tecnologia e computadores</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-2">
+                        <span class="category-card__icon" aria-hidden="true">📱</span>
+                        <span class="category-card__label">Celulares e dispositivos</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-3">
+                        <span class="category-card__icon" aria-hidden="true">🪑</span>
+                        <span class="category-card__label">Escritório e conforto</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-4">
+                        <span class="category-card__icon" aria-hidden="true">👕</span>
+                        <span class="category-card__label">Moda e acessórios</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-5">
+                        <span class="category-card__icon" aria-hidden="true">🚗</span>
+                        <span class="category-card__label">Veículos e mobilidade</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-6">
+                        <span class="category-card__icon" aria-hidden="true">🏠</span>
+                        <span class="category-card__label">Casa e utilidades</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-7">
+                        <span class="category-card__icon" aria-hidden="true">🍔</span>
+                        <span class="category-card__label">Alimentos e bebidas</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-8">
+                        <span class="category-card__icon" aria-hidden="true">🎮</span>
+                        <span class="category-card__label">Cultura e Colecionáveis</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
+                    <button class="category-card" type="button" data-open-modal="modal-9">
+                        <span class="category-card__icon" aria-hidden="true">✨</span>
+                        <span class="category-card__label">Itens Especiais</span>
+                        <svg class="icon category-card__arrow" aria-hidden="true"><use href="#i-arrow" /></svg>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- MODAIS DA API -->
-        <div class="modal-overlay" id="modal-1">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Tecnologia e computadores</h3>
-                    <button class="close-btn" onclick="closeModal('modal-1')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-1">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-2">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Celulares e dispositivos</h3>
-                    <button class="close-btn" onclick="closeModal('modal-2')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-2">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-3">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Escritório e conforto</h3>
-                    <button class="close-btn" onclick="closeModal('modal-3')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-3">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-4">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Moda e acessórios</h3>
-                    <button class="close-btn" onclick="closeModal('modal-4')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-4">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-5">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Veículos e mobilidade</h3>
-                    <button class="close-btn" onclick="closeModal('modal-5')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-5">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-6">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Casa e utilidades</h3>
-                    <button class="close-btn" onclick="closeModal('modal-6')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-6">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-7">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Alimentos e bebidas</h3>
-                    <button class="close-btn" onclick="closeModal('modal-7')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-7">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-8">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Cultura, Colecionáveis e Ficção</h3>
-                    <button class="close-btn" onclick="closeModal('modal-8')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-8">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="modal-9">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>Curiosidades, Itens Especiais</h3>
-                    <button class="close-btn" onclick="closeModal('modal-9')" aria-label="Fechar">&times;</button>
-                </div>
-                <div class="modal-grid" id="grid-9">
-                    <p class="loading-text">A carregar produtos da API...</p>
-                </div>
-            </div>
-        </div>
-
         <!-- SOBRE A MARCA -->
-        <section class="about" id="sobre">
-            <div class="container about-grid">
-                <div class="about-art">
-                    <div class="art-copy">
-                        <h3>
-                            Transformando a indústria do
-                            <span style="color: #4285F4; font-size: inherit;">Rio de Janeiro</span>
-                        </h3>
-                    </div>
+        <section class="section about" id="sobre" aria-labelledby="sobre-title">
+            <div class="container about__grid">
+                <div class="about__art">
+                    <h3 class="about__art-title">
+                        Transformando a indústria do
+                        <span class="text-accent">Rio de Janeiro</span>
+                    </h3>
                 </div>
 
-                <div>
-                    <div class="eyebrow">Nossa Missão</div>
+                <div class="about__content">
+                    <p class="eyebrow">Nossa Missão</p>
 
-                    <h2>
+                    <h2 id="sobre-title">
                         Educação e
-                        <span style="color: var(--blue); font-size: inherit;">Tecnologia</span>
+                        <span class="text-gradient">Tecnologia</span>
                     </h2>
 
-                    <p class="about-text">
+                    <p class="about__text">
                         O SENAI é uma das principais instituições brasileiras voltadas à educação profissional, à
                         inovação e ao desenvolvimento da indústria. Com uma atuação próxima às empresas e às
                         necessidades do mercado, oferece formação e capacitação para preparar profissionais para os
                         desafios de um setor industrial cada vez mais tecnológico e competitivo.
                     </p>
 
-                    <div class="benefits">
-                        <div class="benefit">
-                            <span class="check">✓</span>
-                            <span>Projetos focados na necessidade do mercado</span>
-                        </div>
-                        <div class="benefit">
-                            <span class="check">✓</span>
-                            <span>Alta tecnologia aplicada</span>
-                        </div>
-                        <div class="benefit">
-                            <span class="check">✓</span>
-                            <span>Feito por profissionais capacitados</span>
-                        </div>
-                    </div>
+                    <ul class="benefits">
+                        <li class="benefit">
+                            <span class="benefit__check" aria-hidden="true">
+                                <svg class="icon"><use href="#i-check" /></svg>
+                            </span>
+                            Projetos focados na necessidade do mercado
+                        </li>
+                        <li class="benefit">
+                            <span class="benefit__check" aria-hidden="true">
+                                <svg class="icon"><use href="#i-check" /></svg>
+                            </span>
+                            Alta tecnologia aplicada
+                        </li>
+                        <li class="benefit">
+                            <span class="benefit__check" aria-hidden="true">
+                                <svg class="icon"><use href="#i-check" /></svg>
+                            </span>
+                            Feito por profissionais capacitados
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
 
         <!-- NEWSLETTER -->
-        <section class="newsletter" id="contato">
+        <section class="section newsletter" id="contato" aria-labelledby="contato-title">
             <div class="container">
-                <div class="eyebrow">Fique por dentro</div>
-                <h2>Receba nossas novidades.</h2>
-                <p>Assine nossa newsletter para saber mais sobre novos projetos e produtos do FIRJAN SENAI.</p>
+                <div class="newsletter__card">
+                    <p class="eyebrow">Fique por dentro</p>
+                    <h2 id="contato-title">Receba nossas novidades.</h2>
+                    <p class="newsletter__text">
+                        Assine nossa newsletter para saber mais sobre novos projetos e produtos do FIRJAN SENAI.
+                    </p>
 
-                <form class="form" id="newsletterForm">
-                    <input type="email" id="email" placeholder="Seu e-mail corporativo ou pessoal" required>
-                    <button class="btn btn-primary" type="submit">Inscrever-se</button>
-                </form>
+                    <form class="inline-form" id="newsletterForm">
+                        <label class="sr-only" for="email">E-mail</label>
+                        <input class="input" type="email" id="email" name="email" autocomplete="email"
+                            placeholder="Seu e-mail corporativo ou pessoal" required>
+                        <button class="btn btn--primary" type="submit">Inscrever-se</button>
+                    </form>
+                </div>
             </div>
         </section>
 
     </main>
 
     <!-- FOOTER -->
-    <footer>
-        © 2026 FIRJAN SENAI · Transformando o futuro da indústria.<br>
-        Desenvolvido pela turma do curso Tec. em Desenvolvimento de Sistemas.
+    <footer class="site-footer">
+        <div class="container site-footer__inner">
+            <img class="site-footer__logo" src="FirjanSENAI.png" alt="" width="360" height="360" loading="lazy">
+            <p>
+                © 2026 FIRJAN SENAI · Transformando o futuro da indústria.<br>
+                Desenvolvido pela turma do curso Tec. em Desenvolvimento de Sistemas.
+            </p>
+        </div>
     </footer>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+    <!-- MODAIS DA API (um por categoria) -->
+    <dialog class="modal modal--wide" id="modal-1" aria-labelledby="modal-1-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-1-title">Tecnologia e computadores</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-1">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
 
-    <script src="script.js"></script>
+    <dialog class="modal modal--wide" id="modal-2" aria-labelledby="modal-2-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-2-title">Celulares e dispositivos</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-2">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-3" aria-labelledby="modal-3-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-3-title">Escritório e conforto</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-3">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-4" aria-labelledby="modal-4-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-4-title">Moda e acessórios</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-4">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-5" aria-labelledby="modal-5-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-5-title">Veículos e mobilidade</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-5">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-6" aria-labelledby="modal-6-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-6-title">Casa e utilidades</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-6">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-7" aria-labelledby="modal-7-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-7-title">Alimentos e bebidas</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-7">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-8" aria-labelledby="modal-8-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-8-title">Cultura, Colecionáveis e Ficção</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-8">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog class="modal modal--wide" id="modal-9" aria-labelledby="modal-9-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="modal-9-title">Curiosidades, Itens Especiais</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body product-grid" id="grid-9">
+                <p class="state-msg"><span class="spinner" aria-hidden="true"></span>A carregar produtos da API...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL DE LOGIN / REGISTRO -->
+    <dialog class="modal modal--narrow" id="auth-modal" aria-labelledby="auth-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="auth-title">Login do Aluno</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <div class="modal__body">
+                <form id="auth-form" class="stack-form" novalidate>
+                    <label class="field">
+                        <span class="sr-only">Nome de usuário</span>
+                        <input class="input" type="text" id="auth-username" name="username" autocomplete="username" autofocus
+                            placeholder="Nome de usuário (ex: joao.senai)" required>
+                    </label>
+                    <label class="field">
+                        <span class="sr-only">Senha</span>
+                        <input class="input" type="password" id="auth-password" name="password"
+                            autocomplete="current-password" placeholder="Sua senha" required>
+                    </label>
+                    <button class="btn btn--primary btn--block" type="submit" id="auth-submit-btn">Entrar</button>
+                </form>
+                <p class="auth-switch">
+                    <span id="auth-switch-text">Não tem conta?</span>
+                    <button class="link-btn" type="button" id="auth-toggle-link">Registre-se</button>
+                </p>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL DE PERFIL (CARRINHO) -->
+    <dialog class="modal modal--medium" id="perfil-modal" aria-labelledby="perfil-title">
+        <div class="modal__panel">
+            <div class="modal__header">
+                <h3 id="perfil-title">Meu Perfil SENAI</h3>
+                <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+            </div>
+            <!-- O conteúdo (produtos comprados) é gerado pelo JS -->
+            <div class="modal__body" id="perfil-conteudo"></div>
+        </div>
+    </dialog>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast" popover="manual" role="status" aria-live="polite"></div>
 
 </body>
 
