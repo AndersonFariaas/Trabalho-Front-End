@@ -2,12 +2,13 @@ import { $, createButton, createElement, createIcon } from "../dom.js";
 import { formatCoins } from "../format.js";
 import * as Account from "../features/account.js";
 import * as Cart from "../features/cart.js";
+import { initCartView, openCart } from "./cart-view.js";
 import { initProfileView, openProfile } from "./profile-view.js";
 import { showToast } from "./toast.js";
 
 /**
  * View da conta no cabeçalho (saudação, saldo, botões) e formulário de login.
- * O painel do perfil fica em profile-view.js. Tudo é redesenhado a partir do estado da conta.
+ * Os painéis ficam em cart-view.js (carrinho) e profile-view.js (perfil e inventário). Tudo é redesenhado a partir do estado da conta.
  */
 
 const elements = {
@@ -37,8 +38,8 @@ function renderHeader({ profile, products, cart }) {
             { className: "auth-area__balance", attrs: { "aria-label": `Saldo: ${formatCoins(profile.moedas)}` } },
             [createIcon("coin"), formatCoins(profile.moedas)],
         ),
-        createButton(`Carrinho (${itemCount})`, "ghost", () => openProfile("carrinho")),
-        createButton("Meu Perfil", "primary", () => openProfile()),
+        createButton(`Carrinho (${itemCount})`, "ghost", openCart),
+        createButton("Meu Perfil", "primary", openProfile),
         createButton("Sair", "ghost", Account.logout),
     );
 }
@@ -78,6 +79,7 @@ async function handleLoginSubmit(event) {
 export function initAccountView() {
     Account.accountStore.subscribe(renderHeader);
     renderHeader(Account.accountStore.getState());
+    initCartView();
     initProfileView();
 
     elements.form.addEventListener("submit", handleLoginSubmit);
