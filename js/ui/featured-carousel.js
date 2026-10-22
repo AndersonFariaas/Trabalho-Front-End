@@ -1,6 +1,6 @@
 import { FEATURED_COUNT } from "../config.js";
 import { $, createElement, createIcon, createProductImage, createStateMessage } from "../dom.js";
-import { formatPrice } from "../format.js";
+import { formatCoins } from "../format.js";
 
 /**
  * Faixa contínua de destaques (mesmo comportamento do carrossel do Majestic-12):
@@ -15,7 +15,6 @@ const DRAG_THRESHOLD = 6; // px antes de um toque virar arrasto (abaixo disso é
 const FRICTION = 4; // quão rápido o embalo do arrasto perde força
 const MAX_FLING = 2500; // px/s
 const NUDGE_MS = 450;
-const coinFormatter = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
 
 /** Embaralhamento de Fisher-Yates (cópia, sem alterar a lista original). */
 function shuffle(items) {
@@ -42,12 +41,9 @@ function createCard(product, isClone) {
             createElement("span", { className: "featured-card__media" }, [image]),
             createElement("span", { className: "featured-card__body" }, [
                 createElement("span", { className: "featured-card__title", text: product.nome }),
-                createElement("span", { className: "featured-card__prices" }, [
-                    createElement("span", { className: "featured-card__coins" }, [
-                        createIcon("coin"),
-                        product.precoMoedas === null ? "—" : coinFormatter.format(product.precoMoedas),
-                    ]),
-                    createElement("span", { className: "featured-card__price", text: formatPrice(product.preco) }),
+                createElement("span", { className: "featured-card__coins" }, [
+                    createIcon("coin"),
+                    product.precoMoedas === null ? "Preço indisponível" : formatCoins(product.precoMoedas),
                 ]),
             ]),
         ],

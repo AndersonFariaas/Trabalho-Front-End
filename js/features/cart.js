@@ -75,8 +75,3 @@ export function coinTotal(lines) {
     if (lines.some((line) => line.product.precoMoedas === null)) return null;
     return lines.reduce((sum, line) => sum + line.product.precoMoedas * line.quantity, 0);
 }
-
-/** @param {CartLine[]} lines */
-export function referenceTotal(lines) {
-    return lines.reduce((sum, line) => sum + line.product.preco * line.quantity, 0);
-}
