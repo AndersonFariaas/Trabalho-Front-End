@@ -1735,7 +1735,8 @@ p {
 
 .product-detail {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    /* minmax(0, …): as colunas podem encolher abaixo do conteúdo em telas bem estreitas */
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
 }
 
 .product-detail__media {
@@ -1792,6 +1793,10 @@ p {
 .product-detail__price {
     color: var(--text-muted);
     font-weight: 600;
+}
+
+.product-detail .btn {
+    white-space: normal;
 }
 
 .product-detail__close {
@@ -2134,7 +2139,7 @@ p {
     }
 
     .product-detail {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .product-detail__info {
