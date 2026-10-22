@@ -9,13 +9,14 @@ O aluno entra com o **mesmo nome e senha do sistema de moedas da turma** (chave 
 | `GET /api/auth/alunos`    | Lista só os nomes, para o autocompletar do login.                                                                                 |
 | `POST /api/auth/login`    | Recebe `{ nome, senha }`, confere a senha (bcrypt ou texto puro legado) e cria a sessão em cookie `HttpOnly`.                     |
 | `POST /api/auth/logout`   | Encerra a sessão.                                                                                                                 |
-| `GET /api/loja/perfil`    | Devolve `{ id, nome, moedas, inventario }` do aluno logado, ou `null` para visitante sem login.                                   |
-| `POST /api/loja/checkout` | Recebe `{ itens: [{ id, quantidade }], requestId }`, recalcula os preços, confere o saldo, debita as moedas e grava o inventário. |
+| `GET /api/loja/perfil`    | Devolve `{ id, nome, moedas, ranking, inventario }` do aluno logado, ou `null` para visitante sem login.                          |
+| `POST /api/loja/checkout` | Recebe `{ itens: [{ id, quantidade }], requestId }`, recalcula os preços, confere o saldo, registra o gasto e grava o inventário. |
 
 ### Regras da compra
 
 - **O servidor é a fonte da verdade:** o preço vem do catálogo `senai/produtos` lido no servidor, nunca do navegador.
 - **Preço em moedas:** usa `preco_moedas` (ou `moedas`) quando o produto tiver; senão, **1 moeda = R$ 1** (`preco`), arredondando para cima.
+- **Ranking separado do saldo:** o campo `coins` é o total de moedas **ganhas** e só o painel do professor o altera; é a pontuação do ranking. A loja soma cada compra em `moedas_gastas` e nunca mexe em `coins`. O saldo para compras é `coins − moedas_gastas` (nunca negativo: se o professor zerar um aluno que já comprou, o saldo fica 0). O perfil devolve `moedas` (saldo) e `ranking: { posicao, total, moedas }`, com empates dividindo a mesma posição.
 - **Inventário no cadastro do aluno:** fica no campo `inventario` do próprio registro em `coinsnew`, no formato `[{ id, nome, quantidade, preco_moedas }]`. O débito e o item novo entram na **mesma gravação**, então nunca fica moeda descontada sem produto.
 - **Sem cobrança dupla:** cada compra tem um `requestId` (UUID gerado no navegador). O servidor guarda o último em `ultima_compra_id`, e uma repetição (duplo clique ou nova tentativa após timeout) devolve o perfil sem cobrar de novo.
 - **Conferência pós-gravação:** como o armazenamento não tem transações, o servidor relê o cadastro depois de gravar. Se outra gravação simultânea sobrescreveu a compra, o aluno recebe um erro e nada é cobrado.
@@ -40,4 +41,4 @@ O aluno entra com o **mesmo nome e senha do sistema de moedas da turma** (chave 
 - **A chave `senai/coinsnew` é pública:** qualquer pessoa consegue ler os hashes de senha (e as senhas em texto puro de alguns alunos) direto da API do FreeOnlineStorage, e a loja não tem como esconder isso. O responsável pelo sistema de moedas deve restringir a leitura e pedir a troca das senhas expostas, principalmente as que estão em texto puro.
 - **Gravações simultâneas:** o painel do professor e a loja gravam o objeto inteiro. A conferência pós-gravação detecta quando a compra foi sobrescrita, mas, se o professor alterar um saldo no mesmo instante de uma compra, a alteração do professor pode se perder. Para eliminar esse risco, o serviço de moedas precisaria de uma operação atômica por aluno.
 - **Tentativas de senha:** não há limite de tentativas de login, porque a Vercel não guarda estado entre requisições sem um banco de dados. O bcrypt deixa cada tentativa lenta, mas um limitador (ex.: Vercel KV ou Upstash) é recomendado se a loja for aberta ao público.
-- **Campos extras no cadastro:** o painel do professor preserva `inventario` e `ultima_compra_id` (ele copia cada aluno com `{ ...usuario }`). Qualquer outro sistema que regrave `coinsnew` também precisa preservar esses campos, ou os inventários se perdem.
+- **Campos extras no cadastro:** o painel do professor preserva `inventario`, `moedas_gastas` e `ultima_compra_id` (ele copia cada aluno com `{ ...usuario }`). Qualquer outro sistema que regrave `coinsnew` também precisa preservar esses campos, ou os inventários e os gastos se perdem (um aluno que perdesse `moedas_gastas` voltaria a ter as moedas que já gastou).

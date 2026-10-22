@@ -5,7 +5,7 @@ import { authenticate, toPublicProfile } from "../../lib/students.js";
 
 export default createHandler("POST", async (req, res) => {
     const { nome, senha } = parseBody(loginSchema, req.body);
-    const student = await authenticate(nome, senha);
+    const { data, student } = await authenticate(nome, senha);
     setSessionCookie(res, student);
-    return toPublicProfile(student);
+    return toPublicProfile(student, data);
 });
