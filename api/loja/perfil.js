@@ -8,8 +8,8 @@ export default createHandler("GET", async (req, res) => {
     if (!readSession(req)) return null;
 
     try {
-        const { student } = await requireStudent(req);
-        return toPublicProfile(student);
+        const { data, student } = await requireStudent(req);
+        return toPublicProfile(student, data);
     } catch (error) {
         if (error.status === 401) clearSessionCookie(res);
         throw error;

@@ -1,5 +1,5 @@
-import { $, createElement } from "../dom.js";
-import { formatUnits } from "../format.js";
+import { $, createElement, createIcon } from "../dom.js";
+import { formatCoins, formatUnits } from "../format.js";
 import * as Account from "../features/account.js";
 import {
     coinsLabel,
@@ -31,6 +31,31 @@ function renderInventoryLine(item, products) {
     ]);
 }
 
+const PODIUM_SIZE = 3;
+
+function rankingStat(icon, label, value) {
+    return createElement("div", { className: "ranking-stat" }, [
+        createElement("span", { className: "ranking-stat__icon" }, [createIcon(icon)]),
+        createElement("div", { className: "ranking-stat__text" }, [
+            createElement("span", { className: "ranking-stat__label", text: label }),
+            createElement("strong", { className: "ranking-stat__value", text: value }),
+        ]),
+    ]);
+}
+
+/**
+ * Posição e moedas do ranking da turma. As moedas do ranking são as ganhas:
+ * compras na loja não descontam daqui (só do saldo).
+ */
+function renderRanking({ posicao, total, moedas }) {
+    const stats = createElement("div", { className: "ranking-stats", attrs: { "aria-label": "Ranking da turma" } }, [
+        rankingStat("trophy", "Posição no ranking", `${posicao}º de ${total}`),
+        rankingStat("coin", "Moedas no ranking", formatCoins(moedas)),
+    ]);
+    stats.classList.toggle("ranking-stats--podium", posicao <= PODIUM_SIZE);
+    return stats;
+}
+
 function renderProfile(state) {
     if (!isModalOpen(PROFILE_MODAL)) return;
     if (!state.profile) {
@@ -51,6 +76,7 @@ function renderProfile(state) {
 
     replaceDrawerContent(content, [
         renderStudentCard(state.profile),
+        ...(state.profile.ranking ? [renderRanking(state.profile.ranking)] : []),
         sectionHeading("Inventário", inventory.length),
         panel,
     ]);

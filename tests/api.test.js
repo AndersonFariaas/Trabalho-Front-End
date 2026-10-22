@@ -46,7 +46,13 @@ describe("login", () => {
         const res = await call(loginHandler, { body: { nome: "  joao   teste da silva ", senha: "senha123" } });
 
         expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({ id: 1, nome: "João Teste da Silva", moedas: 1000, inventario: [] });
+        expect(res.body).toEqual({
+            id: 1,
+            nome: "João Teste da Silva",
+            moedas: 1000,
+            ranking: { posicao: 1, total: 3, moedas: 1000 },
+            inventario: [],
+        });
         expect(JSON.stringify(res.body)).not.toContain("senha");
         expect(res.headers["set-cookie"]).toMatch(/HttpOnly; Secure; SameSite=Lax/);
     });
@@ -119,6 +125,49 @@ describe("sessão", () => {
         const res = await call(perfilHandler, { method: "GET", cookie });
         expect(res.statusCode).toBe(401);
         expect(res.headers["set-cookie"]).toMatch(/Max-Age=0/);
+    });
+});
+
+describe("ranking separado do saldo", () => {
+    it("a compra desconta do saldo, mas não das moedas do ranking", async () => {
+        const cookie = await loginAs("João Teste da Silva", "senha123");
+        const res = await checkout(cookie, [{ id: "TECLADO", quantidade: 1 }]);
+
+        const joao = storage.keys.coinsnew.usuarios[0];
+        expect(joao.coins).toBe(1000);
+        expect(joao.moedas_gastas).toBe(700);
+        expect(res.body.moedas).toBe(300);
+        expect(res.body.ranking).toEqual({ posicao: 1, total: 3, moedas: 1000 });
+    });
+
+    it("soma os gastos de várias compras e usa o saldo disponível para validar", async () => {
+        const cookie = await loginAs("João Teste da Silva", "senha123");
+        await checkout(cookie, [{ id: "TECLADO", quantidade: 1 }]);
+        await checkout(cookie, [{ id: "CABO HDMI", quantidade: 1 }]);
+        expect(storage.keys.coinsnew.usuarios[0].moedas_gastas).toBe(900);
+
+        // Restam 100 moedas: um cabo de 200 não pode ser comprado, mesmo com 1.000 no ranking
+        const poor = await checkout(cookie, [{ id: "CABO HDMI", quantidade: 1 }]);
+        expect(poor.statusCode).toBe(409);
+        expect(storage.keys.coinsnew.usuarios[0].coins).toBe(1000);
+    });
+
+    it("calcula a posição pelas moedas ganhas, com empate dividindo a posição", async () => {
+        storage.keys.coinsnew.usuarios[2].coins = 1000; // empata com o João
+        const cookie = await loginAs("Maria Teste", "abc");
+        const res = await call(perfilHandler, { method: "GET", cookie });
+        expect(res.body.ranking).toEqual({ posicao: 3, total: 3, moedas: 50 });
+
+        const tied = await call(loginHandler, { body: { nome: "Outro Aluno", senha: "outra" } });
+        expect(tied.body.ranking.posicao).toBe(1);
+    });
+
+    it("não deixa o saldo negativo se o professor zerar um aluno que já comprou", async () => {
+        storage.keys.coinsnew.usuarios[1].moedas_gastas = 30;
+        storage.keys.coinsnew.usuarios[1].coins = 0;
+        const cookie = await loginAs("Maria Teste", "abc");
+        const res = await call(perfilHandler, { method: "GET", cookie });
+        expect(res.body.moedas).toBe(0);
     });
 });
 
