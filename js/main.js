@@ -2,6 +2,7 @@ import { MESSAGES, PRODUCTS_REFRESH_MS } from "./config.js";
 import * as Account from "./features/account.js";
 import { fetchProducts } from "./services/products.js";
 import { initAccountView } from "./ui/account-view.js";
+import { initBinaryRain } from "./ui/binary-rain.js";
 import { createFeaturedCarousel } from "./ui/featured-carousel.js";
 import { renderProducts, showMessageInEmptyGrids } from "./ui/catalog-view.js";
 import { initHeader } from "./ui/header.js";
@@ -9,6 +10,7 @@ import { initMobileMenu } from "./ui/menu.js";
 import { initModals } from "./ui/modal.js";
 import { initNewsletter } from "./ui/newsletter.js";
 import { openProductDetail } from "./ui/product-view.js";
+import { initReveal } from "./ui/reveal.js";
 import { initThemeToggle } from "./ui/theme.js";
 
 const carousel = createFeaturedCarousel({ onSelect: openProductDetail });
@@ -52,6 +54,8 @@ initHeader();
 initMobileMenu();
 initNewsletter();
 initThemeToggle();
+initReveal();
+initBinaryRain();
 initAccountView();
 
 void Account.refreshProfile({ quiet: true });
