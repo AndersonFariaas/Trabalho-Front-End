@@ -159,22 +159,23 @@ function checkoutRequestId(itens) {
     return pendingCheckout.requestId;
 }
 
+/** @returns {Promise<boolean>} true se a compra foi confirmada */
 export async function checkout() {
     const { profile, products, cart, isCheckingOut } = getState();
     const lines = Cart.toCartLines(cart, products);
-    if (isCheckingOut) return;
+    if (isCheckingOut) return false;
 
     if (!profile || lines.length === 0) {
         showToast("Entre na sua conta e atualize o perfil para concluir a compra.");
-        return;
+        return false;
     }
     if (Cart.coinTotal(lines) === null) {
         showToast("O preço em moedas não está disponível para todos os produtos.");
-        return;
+        return false;
     }
     if (!globalThis.crypto?.randomUUID) {
         showToast("Este navegador não oferece suporte seguro para confirmar compras.");
-        return;
+        return false;
     }
 
     const itens = lines.map(({ id, quantity }) => ({ id, quantidade: quantity }));
@@ -185,12 +186,14 @@ export async function checkout() {
         accountStore.setState({ profile: updatedProfile });
         updateCart([]);
         showToast("Compra confirmada e inventário atualizado.");
+        return true;
     } catch (error) {
         console.error("Erro ao finalizar a compra:", error);
         showToast(error.message || "Não foi possível concluir a compra.");
         // Erro de regra (saldo, carrinho) gera nova tentativa; erro de rede/servidor reaproveita o id.
         if (error.status && error.status < 500) pendingCheckout = null;
         if (error.status === 401) endSession();
+        return false;
     } finally {
         accountStore.setState({ isCheckingOut: false });
     }

@@ -38,9 +38,6 @@
             <symbol id="i-moon" viewBox="0 0 24 24">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </symbol>
-            <symbol id="i-menu" viewBox="0 0 24 24">
-                <path d="M4 7h16M4 12h16M4 17h16" />
-            </symbol>
             <symbol id="i-close" viewBox="0 0 24 24">
                 <path d="M18 6 6 18M6 6l12 12" />
             </symbol>
@@ -54,6 +51,25 @@
                 <circle cx="9" cy="20" r="1.5" />
                 <circle cx="18" cy="20" r="1.5" />
                 <path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 8H6" />
+            </symbol>
+            <symbol id="i-chevron-left" viewBox="0 0 24 24">
+                <path d="m15 18-6-6 6-6" />
+            </symbol>
+            <symbol id="i-chevron-right" viewBox="0 0 24 24">
+                <path d="m9 18 6-6-6-6" />
+            </symbol>
+            <symbol id="i-coin" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path
+                    d="M14.5 9.5c-.4-.9-1.4-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.1 0-2.1-.6-2.5-1.5M12 6.5V8m0 8v1.5"
+                />
+            </symbol>
+            <symbol id="i-box" viewBox="0 0 24 24">
+                <path d="M21 8 12 3 3 8v8l9 5 9-5V8z" />
+                <path d="m3 8 9 5 9-5M12 13v8" />
+            </symbol>
+            <symbol id="i-trash" viewBox="0 0 24 24">
+                <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" />
             </symbol>
         </svg>
 
@@ -70,11 +86,14 @@
                 </a>
 
                 <div class="nav__panel" id="navLinks">
-                    <ul class="nav__links">
-                        <li><a href="#produtos" class="nav__link">Produtos</a></li>
-                        <li><a href="#sobre" class="nav__link">Sobre Nós</a></li>
-                        <li><a href="#contato" class="nav__link">Contato</a></li>
-                    </ul>
+                    <div class="nav__menu">
+                        <ul class="nav__links">
+                            <li><a href="#produtos" class="nav__link">Produtos</a></li>
+                            <li><a href="#sobre" class="nav__link">Sobre Nós</a></li>
+                            <li><a href="#contato" class="nav__link">Contato</a></li>
+                        </ul>
+                        <span class="nav__indicator" aria-hidden="true"></span>
+                    </div>
 
                     <!-- Área onde os botões de Login ou Nome do Usuário aparecem (preenchida pelo JavaScript) -->
                     <div class="auth-area" id="auth-area"></div>
@@ -93,8 +112,7 @@
                         aria-controls="navLinks"
                         aria-expanded="false"
                     >
-                        <svg class="icon icon--menu" aria-hidden="true"><use href="#i-menu" /></svg>
-                        <svg class="icon icon--close" aria-hidden="true"><use href="#i-close" /></svg>
+                        <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
                     </button>
                 </div>
             </nav>
@@ -104,7 +122,7 @@
         <main id="conteudo">
             <!-- HERO -->
             <section class="hero" aria-labelledby="hero-title">
-                <div class="hero__inner container">
+                <div class="container">
                     <div class="hero__content">
                         <p class="eyebrow eyebrow--pill">⚡ Tecnologia · Educação · Indústria</p>
                         <h1 id="hero-title">Soluções do<br /><span class="text-gradient">Futuro, Hoje.</span></h1>
@@ -120,26 +138,29 @@
                             <a class="btn btn--ghost btn--lg" href="#sobre">Conhecer o SENAI</a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- ÁREA DE DESTAQUE COM CARROSSEL -->
-                    <div class="product-stage">
-                        <div
-                            class="carousel"
-                            id="heroCarousel"
-                            role="region"
-                            aria-roledescription="carrossel"
-                            aria-label="Produtos em destaque"
-                        >
-                            <div class="carousel__track" id="carouselTrack">
-                                <div class="carousel__slide is-active">
-                                    <p class="state-msg">
-                                        <span class="spinner" aria-hidden="true"></span>Carregando destaques da API...
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="carousel__indicators" id="carouselIndicators"></div>
+                <!-- ÁREA DE DESTAQUE COM CARROSSEL (produtos aleatórios girando) -->
+                <div class="featured">
+                    <div
+                        class="featured__viewport"
+                        id="heroCarousel"
+                        role="region"
+                        aria-roledescription="carrossel"
+                        aria-label="Produtos em destaque"
+                    >
+                        <div class="featured__track" id="carouselTrack">
+                            <p class="state-msg">
+                                <span class="spinner" aria-hidden="true"></span>Carregando destaques da API...
+                            </p>
                         </div>
                     </div>
+                    <button class="featured__arrow featured__arrow--prev" type="button" aria-label="Destaque anterior">
+                        <svg class="icon" aria-hidden="true"><use href="#i-chevron-left" /></svg>
+                    </button>
+                    <button class="featured__arrow featured__arrow--next" type="button" aria-label="Próximo destaque">
+                        <svg class="icon" aria-hidden="true"><use href="#i-chevron-right" /></svg>
+                    </button>
                 </div>
             </section>
 
@@ -491,17 +512,27 @@
             </div>
         </dialog>
 
-        <!-- MODAL DE PERFIL, CARRINHO E INVENTÁRIO -->
-        <dialog class="modal modal--wide" id="perfil-modal" aria-labelledby="perfil-title">
-            <div class="modal__panel">
-                <div class="modal__header">
+        <!-- PAINEL DE PERFIL, CARRINHO E INVENTÁRIO -->
+        <dialog class="modal modal--drawer" id="perfil-modal" aria-labelledby="perfil-title">
+            <div class="drawer">
+                <div class="drawer__bar">
                     <h3 id="perfil-title">Meu Perfil SENAI</h3>
                     <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
                         <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
                     </button>
                 </div>
                 <!-- Perfil, carrinho e inventário são carregados pelo JavaScript. -->
-                <div class="modal__body" id="perfil-conteudo"></div>
+                <div class="drawer__content" id="perfil-conteudo"></div>
+            </div>
+        </dialog>
+
+        <!-- DETALHE DO PRODUTO (aberto pelos destaques) -->
+        <dialog class="modal modal--product" id="produto-modal" aria-labelledby="produto-title">
+            <div class="modal__panel">
+                <button class="icon-btn product-detail__close" type="button" data-close-modal aria-label="Fechar">
+                    <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                </button>
+                <div class="product-detail" id="produto-conteudo"></div>
             </div>
         </dialog>
 
