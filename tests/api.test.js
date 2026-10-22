@@ -50,7 +50,7 @@ describe("login", () => {
             id: 1,
             nome: "João Teste da Silva",
             moedas: 1000,
-            ranking: { posicao: 1, total: 3, moedas: 1000 },
+            ranking: { posicao: 1, total: 3 },
             inventario: [],
         });
         expect(JSON.stringify(res.body)).not.toContain("senha");
@@ -137,7 +137,7 @@ describe("ranking separado do saldo", () => {
         expect(joao.coins).toBe(1000);
         expect(joao.moedas_gastas).toBe(700);
         expect(res.body.moedas).toBe(300);
-        expect(res.body.ranking).toEqual({ posicao: 1, total: 3, moedas: 1000 });
+        expect(res.body.ranking).toEqual({ posicao: 1, total: 3 });
     });
 
     it("soma os gastos de várias compras e usa o saldo disponível para validar", async () => {
@@ -156,7 +156,7 @@ describe("ranking separado do saldo", () => {
         storage.keys.coinsnew.usuarios[2].coins = 1000; // empata com o João
         const cookie = await loginAs("Maria Teste", "abc");
         const res = await call(perfilHandler, { method: "GET", cookie });
-        expect(res.body.ranking).toEqual({ posicao: 3, total: 3, moedas: 50 });
+        expect(res.body.ranking).toEqual({ posicao: 3, total: 3 });
 
         const tied = await call(loginHandler, { body: { nome: "Outro Aluno", senha: "outra" } });
         expect(tied.body.ranking.posicao).toBe(1);
