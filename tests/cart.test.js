@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { addItem, changeQuantity, coinTotal, countItems, removeItem, toCartLines } from "../js/features/cart.js";
 
 const products = new Map([
-    ["A", { id: "A", nome: "A", preco: 10, precoMoedas: 10 }],
-    ["B", { id: "B", nome: "B", preco: 5, precoMoedas: null }],
+    ["A", { id: "A", nome: "A", precoMoedas: 10 }],
+    ["B", { id: "B", nome: "B", precoMoedas: null }],
 ]);
 
 describe("carrinho do navegador", () => {

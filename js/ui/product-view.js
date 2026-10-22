@@ -1,5 +1,5 @@
 import { $, createElement, createIcon, createProductImage } from "../dom.js";
-import { formatCoins, formatPrice } from "../format.js";
+import { formatCoins } from "../format.js";
 import { accountStore } from "../features/account.js";
 import { openModal } from "./modal.js";
 import { showToast } from "./toast.js";
@@ -30,12 +30,9 @@ function renderProduct(product) {
                 text: product.nome,
                 attrs: { id: "produto-title" },
             }),
-            createElement("div", { className: "product-detail__prices" }, [
-                createElement("span", { className: "product-detail__coins" }, [
-                    createIcon("coin"),
-                    product.precoMoedas === null ? "Preço em moedas indisponível" : formatCoins(product.precoMoedas),
-                ]),
-                createElement("span", { className: "product-detail__price", text: formatPrice(product.preco) }),
+            createElement("p", { className: "product-detail__coins" }, [
+                createIcon("coin"),
+                product.precoMoedas === null ? "Preço indisponível" : formatCoins(product.precoMoedas),
             ]),
             addButton,
         ]),

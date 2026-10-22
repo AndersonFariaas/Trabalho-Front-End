@@ -5,7 +5,6 @@
  * @typedef {object} Product
  * @property {string} id          Identificador estável (chave do produto na API).
  * @property {string} nome
- * @property {number} preco       Preço de referência em reais.
  * @property {number | null} precoMoedas  Preço em moedas; null quando não pode ser vendido.
  * @property {string} imagem
  * @property {number} categoria
@@ -44,7 +43,6 @@ export function toProduct(item, fallbackId) {
     return {
         id,
         nome,
-        preco: Number(data.preco) || 0,
         precoMoedas: coinPriceOf(data),
         imagem: typeof data.imagem === "string" ? data.imagem : "",
         categoria: Number(data.categoria) || DEFAULT_CATEGORY,
