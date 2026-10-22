@@ -32,7 +32,7 @@ export function coinPriceOf(data) {
  * @param {string} [fallbackId] Chave do produto quando a API usa o formato de objeto.
  * @returns {Product | null}
  */
-export function toProduct(item, fallbackId) {
+function toProduct(item, fallbackId) {
     if (!item || typeof item !== "object" || Array.isArray(item)) return null;
 
     const data = /** @type {Record<string, any>} */ (item);

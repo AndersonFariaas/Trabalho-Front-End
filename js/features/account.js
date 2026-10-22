@@ -99,8 +99,17 @@ export async function login(nome, senha) {
     try {
         const profile = await shopApi.login(nome, senha);
         startSession(profile);
+
+        const pendingProduct = productWaitingForLogin;
+        productWaitingForLogin = null;
+        const result = pendingProduct ? putInCart(pendingProduct) : null;
+
         closeModal("auth-modal");
-        showToast(`Boas-vindas, ${profile.nome}!`);
+        showToast(
+            result?.added
+                ? `Boas-vindas, ${profile.nome}! "${result.nome}" foi adicionado ao carrinho.`
+                : `Boas-vindas, ${profile.nome}!`,
+        );
         return true;
     } catch (error) {
         showToast(error.message || "Não foi possível entrar. Tente novamente.");
@@ -121,26 +130,36 @@ export async function logout() {
     showToast("Você saiu da conta.");
 }
 
+// Produto que o visitante tentou adicionar antes de entrar: vai para o carrinho logo após o login
+let productWaitingForLogin = null;
+
+/** Esquece o produto pendente (o visitante fechou o login sem entrar). */
+export function forgetProductWaitingForLogin() {
+    productWaitingForLogin = null;
+}
+
+/** @returns {{ added: true, nome: string } | { added: false, message: string }} */
+function putInCart(productId) {
+    const { products, cart } = getState();
+    const product = products.get(productId);
+    if (!product) return { added: false, message: "Este produto não está disponível no momento." };
+    if (Cart.quantityOf(cart, productId) >= MAX_QUANTITY_PER_PRODUCT) {
+        return { added: false, message: `O limite por produto no carrinho é ${MAX_QUANTITY_PER_PRODUCT} unidades.` };
+    }
+    updateCart(Cart.addItem(cart, productId));
+    return { added: true, nome: product.nome };
+}
+
 export function addToCart(productId) {
-    const { profile, products, cart } = getState();
-    if (!profile) {
+    if (!getState().profile) {
+        productWaitingForLogin = productId;
         showToast("Entre na sua conta para adicionar produtos ao carrinho.");
         openLogin();
         return;
     }
 
-    const product = products.get(productId);
-    if (!product) {
-        showToast("Este produto não está disponível no momento.");
-        return;
-    }
-    if (Cart.quantityOf(cart, productId) >= MAX_QUANTITY_PER_PRODUCT) {
-        showToast(`O limite por produto no carrinho é ${MAX_QUANTITY_PER_PRODUCT} unidades.`);
-        return;
-    }
-
-    updateCart(Cart.addItem(cart, productId));
-    showToast(`"${product.nome}" foi adicionado ao carrinho.`);
+    const result = putInCart(productId);
+    showToast(result.added ? `"${result.nome}" foi adicionado ao carrinho.` : result.message);
 }
 
 export function changeQuantity(productId, delta) {

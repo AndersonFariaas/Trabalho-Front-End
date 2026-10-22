@@ -4,6 +4,7 @@ import loginHandler from "../api/auth/login.js";
 import checkoutHandler from "../api/loja/checkout.js";
 import perfilHandler from "../api/loja/perfil.js";
 import { clearPhotoCache } from "../lib/photos.js";
+import { clearLoginAttempts } from "../lib/rate-limit.js";
 import {
     createFakeStorage,
     createRequest,
@@ -33,6 +34,7 @@ const checkout = (cookie, itens, requestId = crypto.randomUUID()) =>
 
 beforeEach(() => {
     clearPhotoCache();
+    clearLoginAttempts();
     vi.stubEnv("SESSION_SECRET", "segredo-de-teste-com-mais-de-32-caracteres!");
     storage = createFakeStorage({ coinsnew: studentsFixture(), produtos: productsFixture() });
     vi.stubGlobal("fetch", storage.fetchMock);
@@ -119,11 +121,45 @@ describe("foto do aluno", () => {
         expect(res.body.foto).toBeNull();
     });
 
+    it("depois de uma falha, não volta a esperar pelo Supabase a cada login", async () => {
+        serveTurmaPhotos({ message: "fora do ar" }, 500);
+        const photoRequests = () =>
+            storage.fetchMock.mock.calls.filter(([url]) => String(url).includes("/rest/v1/aluno")).length;
+
+        await call(loginHandler, { body: { nome: "João Teste da Silva", senha: "senha123" } });
+        await call(loginHandler, { body: { nome: "Maria Teste", senha: "abc" } });
+        expect(photoRequests()).toBe(1);
+    });
+
     it("entra normalmente, sem foto, se o Supabase da turma falhar", async () => {
         serveTurmaPhotos({ message: "fora do ar" }, 500);
         const res = await call(loginHandler, { body: { nome: "João Teste da Silva", senha: "senha123" } });
         expect(res.statusCode).toBe(200);
         expect(res.body.foto).toBeNull();
+    });
+});
+
+describe("limite de tentativas de login", () => {
+    const tryLogin = (senha, ip = "10.0.0.1") =>
+        call(loginHandler, { body: { nome: "Maria Teste", senha }, headers: { "x-forwarded-for": ip } });
+
+    it("bloqueia depois de muitas senhas erradas, mesmo com a senha certa", async () => {
+        for (let attempt = 0; attempt < 8; attempt++) expect((await tryLogin("errada")).statusCode).toBe(401);
+
+        const blocked = await tryLogin("abc");
+        expect(blocked.statusCode).toBe(429);
+        expect(blocked.body.erro).toMatch(/Muitas tentativas/);
+    });
+
+    it("não bloqueia outro endereço de rede nem quem acertou antes do limite", async () => {
+        for (let attempt = 0; attempt < 8; attempt++) await tryLogin("errada");
+        expect((await tryLogin("abc", "10.0.0.2")).statusCode).toBe(200);
+
+        for (let attempt = 0; attempt < 7; attempt++) await tryLogin("errada", "10.0.0.3");
+        expect((await tryLogin("abc", "10.0.0.3")).statusCode).toBe(200);
+        // O acerto zera a contagem
+        for (let attempt = 0; attempt < 7; attempt++) await tryLogin("errada", "10.0.0.3");
+        expect((await tryLogin("abc", "10.0.0.3")).statusCode).toBe(200);
     });
 });
 
@@ -144,7 +180,9 @@ describe("sessão", () => {
         const [name, value] = cookie.split("=");
         const [payload] = value.split(".");
         const forged = `${name}=${payload}.assinatura-falsa`;
-        expect((await call(perfilHandler, { method: "GET", cookie: forged })).body).toBeNull();
+        const forgedRes = await call(perfilHandler, { method: "GET", cookie: forged });
+        expect(forgedRes.body).toBeNull();
+        expect(forgedRes.headers["set-cookie"]).toMatch(/Max-Age=0/); // apaga o cookie adulterado
     });
 
     it("exige login para comprar", async () => {

@@ -1,8 +1,17 @@
 # SENAI Shop Tech
 
-Loja do SENAI FIRJAN ligada ao **sistema de moedas da turma**. O aluno entra com o mesmo nome e senha do SENAI Coins, compra produtos com as próprias moedas e vê os itens comprados no perfil.
+Loja da Firjan SENAI ligada ao **sistema de moedas da turma**. O aluno entra com o mesmo nome e senha do SENAI Coins, compra produtos com as próprias moedas e vê os itens comprados no perfil.
 
 Projeto do curso Técnico em Desenvolvimento de Sistemas.
+
+## Funcionalidades
+
+- **Catálogo** lido da API da turma, com destaques aleatórios girando e 9 categorias.
+- **Login** com o nome e a senha do sistema de moedas, validado no servidor (com limite de tentativas).
+- **Carrinho** em painel próprio e **compra** que desconta do saldo, sem cobrança dupla.
+- **Painel do aluno** com foto (do cadastro da turma), saldo, posição no ranking e inventário.
+- **Ranking preservado:** comprar desconta só do saldo; a pontuação do ranking não muda.
+- Tema claro/escuro, responsivo, acessível e com animações que respeitam quem prefere menos movimento.
 
 ## Como testar no seu computador
 
