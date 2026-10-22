@@ -1,4 +1,5 @@
 import { $, createElement } from "../dom.js";
+import { formatUnits } from "../format.js";
 import * as Account from "../features/account.js";
 import {
     coinsLabel,
@@ -24,7 +25,7 @@ function renderInventoryLine(item, products) {
         thumbnail(products.get(item.id)),
         createElement("div", { className: "line__info" }, [
             createElement("strong", { className: "line__title", text: item.nome }),
-            createElement("span", { className: "line__meta", text: `${item.quantidade} unidade(s)` }),
+            createElement("span", { className: "line__meta", text: formatUnits(item.quantidade) }),
         ]),
         coinsLabel(item.preco_moedas),
     ]);
