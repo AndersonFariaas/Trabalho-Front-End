@@ -512,7 +512,21 @@
             </div>
         </dialog>
 
-        <!-- PAINEL DE PERFIL, CARRINHO E INVENTÁRIO -->
+        <!-- PAINEL DO CARRINHO -->
+        <dialog class="modal modal--drawer" id="carrinho-modal" aria-labelledby="carrinho-title">
+            <div class="drawer">
+                <div class="drawer__bar">
+                    <h3 id="carrinho-title">Meu Carrinho</h3>
+                    <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                        <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                    </button>
+                </div>
+                <!-- Nome, saldo e itens do carrinho são carregados pelo JavaScript. -->
+                <div class="drawer__content" id="carrinho-conteudo"></div>
+            </div>
+        </dialog>
+
+        <!-- PAINEL DO PERFIL E INVENTÁRIO -->
         <dialog class="modal modal--drawer" id="perfil-modal" aria-labelledby="perfil-title">
             <div class="drawer">
                 <div class="drawer__bar">
@@ -521,7 +535,7 @@
                         <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
                     </button>
                 </div>
-                <!-- Perfil, carrinho e inventário são carregados pelo JavaScript. -->
+                <!-- Perfil e inventário são carregados pelo JavaScript. -->
                 <div class="drawer__content" id="perfil-conteudo"></div>
             </div>
         </dialog>
