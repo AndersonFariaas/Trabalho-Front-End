@@ -17,14 +17,6 @@ export const storage = {
         }
     },
 
-    readText(key) {
-        try {
-            return localStorage.getItem(key);
-        } catch {
-            return null;
-        }
-    },
-
     writeText(key, value) {
         try {
             localStorage.setItem(key, value);

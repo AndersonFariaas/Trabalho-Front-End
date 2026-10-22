@@ -3,10 +3,11 @@
  * o navegador os envia sozinho e o JavaScript nunca os lê.
  *
  * @typedef {{ id: string, nome: string, quantidade: number, preco_moedas: number }} InventoryItem
- * @typedef {{ id: number, nome: string, moedas: number, inventario: InventoryItem[] }} Profile
+ * @typedef {{ posicao: number, total: number }} Ranking
+ * @typedef {{ id: number, nome: string, foto: string | null, moedas: number, ranking: Ranking, inventario: InventoryItem[] }} Profile
  */
 
-export class ApiError extends Error {
+class ApiError extends Error {
     constructor(message, status) {
         super(message);
         this.name = "ApiError";

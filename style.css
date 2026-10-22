@@ -345,8 +345,10 @@ p {
     transition: transform var(--duration) var(--ease);
 }
 
-.btn:hover .icon {
-    transform: translateX(3px);
+@media (hover: hover) {
+    .btn:hover .icon {
+        transform: translateX(3px);
+    }
 }
 
 .btn--primary {
@@ -355,11 +357,13 @@ p {
     box-shadow: var(--shadow-accent);
 }
 
-.btn--primary:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        var(--shadow-accent),
-        0 0 0 4px var(--accent-soft);
+@media (hover: hover) {
+    .btn--primary:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            var(--shadow-accent),
+            0 0 0 4px var(--accent-soft);
+    }
 }
 
 .btn--ghost {
@@ -369,10 +373,12 @@ p {
     box-shadow: var(--shadow-sm);
 }
 
-.btn--ghost:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-    color: var(--accent);
+@media (hover: hover) {
+    .btn--ghost:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
 }
 
 .btn--sm {
@@ -405,9 +411,11 @@ p {
         transform var(--duration) var(--ease);
 }
 
-.icon-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+@media (hover: hover) {
+    .icon-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
 }
 
 .icon-btn:active {
@@ -1023,14 +1031,18 @@ p {
     transition: opacity var(--duration) var(--ease);
 }
 
-.category-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
+@media (hover: hover) {
+    .category-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent);
+        box-shadow: var(--shadow);
+    }
 }
 
-.category-card:hover::before {
-    opacity: 1;
+@media (hover: hover) {
+    .category-card:hover::before {
+        opacity: 1;
+    }
 }
 
 .category-card__icon {
@@ -1046,8 +1058,10 @@ p {
     transition: transform var(--duration) var(--ease-spring);
 }
 
-.category-card:hover .category-card__icon {
-    transform: scale(1.08) rotate(-4deg);
+@media (hover: hover) {
+    .category-card:hover .category-card__icon {
+        transform: scale(1.08) rotate(-4deg);
+    }
 }
 
 .category-card__label {
@@ -1064,9 +1078,11 @@ p {
         color var(--duration) var(--ease);
 }
 
-.category-card:hover .category-card__arrow {
-    color: var(--accent);
-    transform: translateX(4px);
+@media (hover: hover) {
+    .category-card:hover .category-card__arrow {
+        color: var(--accent);
+        transform: translateX(4px);
+    }
 }
 
 /* Grade e cartões de produto (dentro dos modais) */
@@ -1091,10 +1107,12 @@ p {
     animation: fade-up 0.4s var(--ease) both;
 }
 
-.product-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
+@media (hover: hover) {
+    .product-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--accent);
+        box-shadow: var(--shadow);
+    }
 }
 
 .product-card__media {
@@ -1111,8 +1129,10 @@ p {
     transition: transform 0.5s var(--ease);
 }
 
-.product-card:hover .product-card__media img {
-    transform: scale(1.06);
+@media (hover: hover) {
+    .product-card:hover .product-card__media img {
+        transform: scale(1.06);
+    }
 }
 
 .product-card__body {
@@ -1216,9 +1236,11 @@ p {
         transform var(--duration) var(--ease);
 }
 
-.benefit:hover {
-    transform: translateX(4px);
-    border-color: var(--accent);
+@media (hover: hover) {
+    .benefit:hover {
+        transform: translateX(4px);
+        border-color: var(--accent);
+    }
 }
 
 .benefit__check {
