@@ -782,7 +782,7 @@ p {
     border-radius: var(--radius-lg);
     background: var(--surface);
     box-shadow: var(--shadow-sm);
-    text-align: left;
+    text-align: center;
     transition:
         transform var(--duration) var(--ease),
         border-color var(--duration) var(--ease),
@@ -807,6 +807,7 @@ p {
 
 .featured-card__body {
     display: grid;
+    justify-items: center;
     gap: 10px;
     padding: 14px 16px 16px;
 }
@@ -1098,9 +1099,11 @@ p {
 .product-card__body {
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex: 1;
     gap: 6px;
     padding: 14px 16px 16px;
+    text-align: center;
 }
 
 .product-card__title {
@@ -1131,7 +1134,6 @@ p {
     min-height: 44px;
     /* Em cartões estreitos (2 colunas no celular) o texto quebra em vez de ser cortado */
     white-space: normal;
-    text-align: center;
 }
 
 /* =====================================================
@@ -2037,10 +2039,18 @@ p {
         flex-direction: column;
     }
 
+    /* Duas colunas iguais com ícone em cima: palavras longas ("Sustentabilidade") cabem em 320px */
     .trust__list {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 12px;
         font-size: 0.85rem;
+    }
+
+    .trust__item {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        text-align: center;
     }
 
     .modal__header,

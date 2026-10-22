@@ -9,7 +9,7 @@ export function initNewsletter() {
         event.preventDefault();
         if (!form.elements.email.value.trim()) return;
 
-        showToast("Inscrição confirmada! Bem-vindo às novidades do SENAI FIRJAN.");
+        showToast("Inscrição confirmada! Boas-vindas às novidades da Firjan SENAI.");
         form.reset();
     });
 }
