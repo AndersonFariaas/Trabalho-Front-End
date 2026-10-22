@@ -1,14 +1,17 @@
 import { $, createElement, createIcon, createProductImage } from "../dom.js";
-import { formatCoins, formatPrice } from "../format.js";
+import { formatCoins } from "../format.js";
 import { accountStore } from "../features/account.js";
+import { DEFAULT_CATEGORY } from "../../shared/products.js";
 import { openModal } from "./modal.js";
 import { showToast } from "./toast.js";
 
 const PRODUCT_MODAL = "produto-modal";
 const content = $("#produto-conteudo");
 
-// O nome da categoria vem do título do modal dela no HTML (fonte única dos nomes)
-const categoryName = (categoryId) => $(`#modal-${categoryId}-title`)?.textContent.trim() ?? "";
+// O nome da categoria vem do título do modal dela no HTML (fonte única dos nomes).
+// Categoria desconhecida cai na padrão, como no catálogo.
+const categoryTitle = (categoryId) => $(`#modal-${categoryId}-title`)?.textContent.trim();
+const categoryName = (categoryId) => categoryTitle(categoryId) ?? categoryTitle(DEFAULT_CATEGORY) ?? "";
 
 /** @param {import("../../shared/products.js").Product} product */
 function renderProduct(product) {
@@ -30,12 +33,9 @@ function renderProduct(product) {
                 text: product.nome,
                 attrs: { id: "produto-title" },
             }),
-            createElement("div", { className: "product-detail__prices" }, [
-                createElement("span", { className: "product-detail__coins" }, [
-                    createIcon("coin"),
-                    product.precoMoedas === null ? "Preço em moedas indisponível" : formatCoins(product.precoMoedas),
-                ]),
-                createElement("span", { className: "product-detail__price", text: formatPrice(product.preco) }),
+            createElement("p", { className: "product-detail__coins" }, [
+                createIcon("coin"),
+                product.precoMoedas === null ? "Preço indisponível" : formatCoins(product.precoMoedas),
             ]),
             addButton,
         ]),

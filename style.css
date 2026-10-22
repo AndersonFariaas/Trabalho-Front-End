@@ -782,7 +782,7 @@ p {
     border-radius: var(--radius-lg);
     background: var(--surface);
     box-shadow: var(--shadow-sm);
-    text-align: left;
+    text-align: center;
     transition:
         transform var(--duration) var(--ease),
         border-color var(--duration) var(--ease),
@@ -807,6 +807,7 @@ p {
 
 .featured-card__body {
     display: grid;
+    justify-items: center;
     gap: 10px;
     padding: 14px 16px 16px;
 }
@@ -822,13 +823,6 @@ p {
     line-height: 1.3;
 }
 
-.featured-card__prices {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-}
-
 .featured-card__coins {
     display: inline-flex;
     align-items: center;
@@ -841,13 +835,6 @@ p {
 .featured-card__coins .icon {
     width: 17px;
     height: 17px;
-}
-
-.featured-card__price {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
 }
 
 @media (hover: hover) {
@@ -1112,9 +1099,11 @@ p {
 .product-card__body {
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex: 1;
     gap: 6px;
     padding: 14px 16px 16px;
+    text-align: center;
 }
 
 .product-card__title {
@@ -1125,21 +1114,19 @@ p {
 }
 
 .product-card__price {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     margin-bottom: 12px;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 800;
     color: var(--accent);
     font-variant-numeric: tabular-nums;
 }
 
-.product-card__coin-price {
-    min-height: 1.25em;
-    margin-top: -12px;
-    margin-bottom: 12px;
-    color: var(--text-muted);
-    font-size: 0.82rem;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
+.product-card__price .icon {
+    width: 19px;
+    height: 19px;
 }
 
 .product-card .btn {
@@ -1147,7 +1134,6 @@ p {
     min-height: 44px;
     /* Em cartões estreitos (2 colunas no celular) o texto quebra em vez de ser cortado */
     white-space: normal;
-    text-align: center;
 }
 
 /* =====================================================
@@ -1768,13 +1754,6 @@ p {
     font-weight: 800;
 }
 
-.product-detail__prices {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 16px;
-}
-
 .product-detail__coins {
     display: inline-flex;
     align-items: center;
@@ -1788,11 +1767,6 @@ p {
 .product-detail__coins .icon {
     width: 24px;
     height: 24px;
-}
-
-.product-detail__price {
-    color: var(--text-muted);
-    font-weight: 600;
 }
 
 .product-detail .btn {
@@ -2065,10 +2039,18 @@ p {
         flex-direction: column;
     }
 
+    /* Duas colunas iguais com ícone em cima: palavras longas ("Sustentabilidade") cabem em 320px */
     .trust__list {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 12px;
         font-size: 0.85rem;
+    }
+
+    .trust__item {
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        text-align: center;
     }
 
     .modal__header,
@@ -2144,6 +2126,11 @@ p {
 
     .product-detail__info {
         padding: 20px;
+    }
+
+    /* Mais espaço para o texto do botão caber numa linha em telas de 320px */
+    .product-detail .btn {
+        padding-inline: 16px;
     }
 
     .product-grid {

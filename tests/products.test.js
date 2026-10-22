@@ -29,7 +29,6 @@ describe("normalizeProducts", () => {
         expect(product).toEqual({
             id: "TECLADO",
             nome: "TECLADO",
-            preco: 700,
             precoMoedas: 700,
             imagem: "x.jpg",
             categoria: 1,

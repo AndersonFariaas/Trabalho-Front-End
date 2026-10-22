@@ -1,6 +1,6 @@
 import { MESSAGES, TOTAL_CATEGORIES } from "../config.js";
-import { createElement, createProductImage, createStateMessage } from "../dom.js";
-import { formatCoins, formatPrice } from "../format.js";
+import { createElement, createIcon, createProductImage, createStateMessage } from "../dom.js";
+import { formatCoins } from "../format.js";
 import { DEFAULT_CATEGORY } from "../../shared/products.js";
 
 const gridFor = (categoryId) => document.getElementById(`grid-${categoryId}`);
@@ -18,11 +18,10 @@ function createProductCard(product) {
         createElement("div", { className: "product-card__media" }, [createProductImage(product.imagem, product.nome)]),
         createElement("div", { className: "product-card__body" }, [
             createElement("h4", { className: "product-card__title", text: product.nome }),
-            createElement("p", { className: "product-card__price", text: formatPrice(product.preco) }),
-            createElement("p", {
-                className: "product-card__coin-price",
-                text: product.precoMoedas === null ? "Moedas: preço indisponível" : formatCoins(product.precoMoedas),
-            }),
+            createElement("p", { className: "product-card__price" }, [
+                createIcon("coin"),
+                product.precoMoedas === null ? "Preço indisponível" : formatCoins(product.precoMoedas),
+            ]),
             addButton,
         ]),
     ]);

@@ -100,7 +100,7 @@ export async function login(nome, senha) {
         const profile = await shopApi.login(nome, senha);
         startSession(profile);
         closeModal("auth-modal");
-        showToast(`Bem-vindo, ${profile.nome}!`);
+        showToast(`Boas-vindas, ${profile.nome}!`);
         return true;
     } catch (error) {
         showToast(error.message || "Não foi possível entrar. Tente novamente.");
