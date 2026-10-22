@@ -9,6 +9,7 @@ import { initMobileMenu } from "./ui/menu.js";
 import { initModals } from "./ui/modal.js";
 import { initNewsletter } from "./ui/newsletter.js";
 import { openProductDetail } from "./ui/product-view.js";
+import { initReveal } from "./ui/reveal.js";
 import { initThemeToggle } from "./ui/theme.js";
 
 const carousel = createFeaturedCarousel({ onSelect: openProductDetail });
@@ -52,6 +53,7 @@ initHeader();
 initMobileMenu();
 initNewsletter();
 initThemeToggle();
+initReveal();
 initAccountView();
 
 void Account.refreshProfile({ quiet: true });
