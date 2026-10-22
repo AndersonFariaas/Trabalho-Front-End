@@ -55,6 +55,8 @@
     --shadow-accent: 0 8px 24px -8px rgb(2 132 199 / 0.55);
 
     --logo-filter: none;
+    --rain-rgb: 2 132 199;
+    --rain-strength: 0.75;
     --danger: #dc2626;
 }
 
@@ -89,6 +91,8 @@
 
     /* Clareia o texto escuro da logo mantendo o azul da marca */
     --logo-filter: invert(1) hue-rotate(180deg) brightness(1.15);
+    --rain-rgb: 56 189 248;
+    --rain-strength: 1;
     --danger: #f87171;
 }
 
@@ -195,6 +199,17 @@ h3 {
 
 p {
     text-wrap: pretty;
+}
+
+/* Chuva de binários: atrás de todo o conteúdo e acima só do fundo da página */
+.binary-rain {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: opacity 0.2s linear;
 }
 
 /* =====================================================
@@ -971,22 +986,26 @@ p {
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Cartão de categoria: ícone em cima, nome e seta centralizados (mesmo padrão dos produtos) */
 .category-card {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 18px 20px;
+    justify-content: center;
+    gap: 12px;
+    min-height: 168px;
+    padding: 24px 16px 18px;
+    overflow: hidden;
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--surface);
     box-shadow: var(--shadow-sm);
-    text-align: left;
-    overflow: hidden;
+    text-align: center;
     transition:
         transform var(--duration) var(--ease),
         border-color var(--duration) var(--ease),
@@ -997,13 +1016,13 @@ p {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(400px circle at 0% 50%, var(--accent-soft), transparent 60%);
+    background: radial-gradient(320px circle at 50% 0%, var(--accent-soft), transparent 70%);
     opacity: 0;
     transition: opacity var(--duration) var(--ease);
 }
 
 .category-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     border-color: var(--accent);
     box-shadow: var(--shadow);
 }
@@ -1016,13 +1035,12 @@ p {
     position: relative;
     display: grid;
     place-items: center;
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface-2);
-    border: 1px solid var(--border);
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     transition: transform var(--duration) var(--ease-spring);
 }
 
@@ -1032,7 +1050,6 @@ p {
 
 .category-card__label {
     position: relative;
-    flex: 1;
     font-weight: 600;
     line-height: 1.35;
 }
@@ -1840,6 +1857,28 @@ p {
     }
 }
 
+/* Seções que surgem ao rolar (js/ui/reveal.js). A animação usa fill "backwards":
+   depois de terminar, o elemento volta aos próprios estilos e os efeitos de hover continuam. */
+.has-reveal [data-reveal]:not(.is-revealed) {
+    opacity: 0;
+}
+
+.has-reveal [data-reveal].is-revealed {
+    animation: fade-up 0.7s var(--ease) var(--reveal-delay, 0ms) backwards;
+}
+
+/* Troca de tema suave: só durante a troca (js/ui/theme.js) */
+.theme-changing,
+.theme-changing *,
+.theme-changing *::before,
+.theme-changing *::after {
+    transition:
+        background-color 0.35s var(--ease),
+        border-color 0.35s var(--ease),
+        color 0.35s var(--ease),
+        box-shadow 0.35s var(--ease) !important;
+}
+
 @keyframes fade-in {
     from {
         opacity: 0;
@@ -2131,6 +2170,20 @@ p {
     /* Mais espaço para o texto do botão caber numa linha em telas de 320px */
     .product-detail .btn {
         padding-inline: 16px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .category-card {
+        min-height: 140px;
+        padding: 18px 12px 14px;
+    }
+
+    .category-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
     }
 
     .product-grid {
