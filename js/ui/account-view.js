@@ -86,7 +86,10 @@ export function initAccountView() {
     // O login pode abrir pelo topo ou por "Adicionar ao carrinho": os nomes carregam quando o campo
     // recebe foco, e o formulário (com a senha) é limpo sempre que o modal fecha.
     elements.name.addEventListener("focus", () => void fillStudentNames());
-    $("#auth-modal").addEventListener("close", () => elements.form.reset());
+    $("#auth-modal").addEventListener("close", () => {
+        elements.form.reset();
+        Account.forgetProductWaitingForLogin();
+    });
 
     // Delegação: os cartões de produto são recriados a cada atualização da API.
     document.addEventListener("click", (event) => {
