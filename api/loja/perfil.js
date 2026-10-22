@@ -9,7 +9,7 @@ export default createHandler("GET", async (req, res) => {
 
     try {
         const { data, student } = await requireStudent(req);
-        return toPublicProfile(student, data);
+        return await toPublicProfile(student, data);
     } catch (error) {
         if (error.status === 401) clearSessionCookie(res);
         throw error;

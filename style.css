@@ -1441,10 +1441,12 @@ p {
 }
 
 .profile-card__avatar {
+    position: relative;
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
     border-radius: 50%;
     background: var(--accent-gradient);
     color: var(--on-accent);
@@ -1452,6 +1454,17 @@ p {
     font-size: 1.1rem;
     font-weight: 800;
     letter-spacing: 0.02em;
+}
+
+/* A foto cobre as iniciais; um anel na cor de destaque contorna o rosto */
+.profile-card__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .profile-card__info {
