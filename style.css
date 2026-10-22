@@ -58,6 +58,7 @@
     --rain-rgb: 2 132 199;
     --rain-strength: 0.75;
     --danger: #dc2626;
+    --gold: #d97706;
 }
 
 /* Tema escuro (padrão) */
@@ -94,6 +95,7 @@
     --rain-rgb: 56 189 248;
     --rain-strength: 1;
     --danger: #f87171;
+    --gold: #fbbf24;
 }
 
 /* =====================================================
@@ -1501,6 +1503,66 @@ p {
 .profile-card__balance .icon {
     width: 22px;
     height: 22px;
+}
+
+/* Ranking da turma no painel do aluno */
+.ranking-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 12px 20px 0;
+}
+
+.ranking-stat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+}
+
+.ranking-stat__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.ranking-stat__icon .icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Pódio (1º ao 3º): troféu dourado */
+.ranking-stats--podium .ranking-stat:first-child .ranking-stat__icon {
+    background: rgb(245 158 11 / 0.15);
+    color: var(--gold);
+}
+
+.ranking-stat__text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ranking-stat__label {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.ranking-stat__value {
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .drawer__heading {
