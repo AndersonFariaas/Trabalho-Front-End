@@ -1,5 +1,5 @@
 import { $, createElement, createIcon } from "../dom.js";
-import { formatCoins, formatUnits } from "../format.js";
+import { formatUnits } from "../format.js";
 import * as Account from "../features/account.js";
 import {
     coinsLabel,
@@ -33,27 +33,17 @@ function renderInventoryLine(item, products) {
 
 const PODIUM_SIZE = 3;
 
-function rankingStat(icon, label, value) {
-    return createElement("div", { className: "ranking-stat" }, [
-        createElement("span", { className: "ranking-stat__icon" }, [createIcon(icon)]),
+/** Posição do aluno no ranking da turma (pelas moedas ganhas: compras na loja não alteram). */
+function renderRanking({ posicao, total }) {
+    const stat = createElement("div", { className: "ranking-stat" }, [
+        createElement("span", { className: "ranking-stat__icon" }, [createIcon("trophy")]),
         createElement("div", { className: "ranking-stat__text" }, [
-            createElement("span", { className: "ranking-stat__label", text: label }),
-            createElement("strong", { className: "ranking-stat__value", text: value }),
+            createElement("span", { className: "ranking-stat__label", text: "Posição no ranking" }),
+            createElement("strong", { className: "ranking-stat__value", text: `${posicao}º de ${total}` }),
         ]),
     ]);
-}
-
-/**
- * Posição e moedas do ranking da turma. As moedas do ranking são as ganhas:
- * compras na loja não descontam daqui (só do saldo).
- */
-function renderRanking({ posicao, total, moedas }) {
-    const stats = createElement("div", { className: "ranking-stats", attrs: { "aria-label": "Ranking da turma" } }, [
-        rankingStat("trophy", "Posição no ranking", `${posicao}º de ${total}`),
-        rankingStat("coin", "Moedas no ranking", formatCoins(moedas)),
-    ]);
-    stats.classList.toggle("ranking-stats--podium", posicao <= PODIUM_SIZE);
-    return stats;
+    stat.classList.toggle("ranking-stat--podium", posicao <= PODIUM_SIZE);
+    return stat;
 }
 
 function renderProfile(state) {
