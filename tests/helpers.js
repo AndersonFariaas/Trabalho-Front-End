@@ -50,12 +50,12 @@ export function productsFixture() {
 }
 
 /** Requisição e resposta no formato que as funções da Vercel recebem. */
-export function createRequest({ method = "POST", body, cookie, origin } = {}) {
+export function createRequest({ method = "POST", body, cookie, origin, headers = {} } = {}) {
     return {
         method,
         url: "/api/teste",
         body,
-        headers: { host: ORIGIN_HOST, ...(cookie ? { cookie } : {}), ...(origin ? { origin } : {}) },
+        headers: { host: ORIGIN_HOST, ...(cookie ? { cookie } : {}), ...(origin ? { origin } : {}), ...headers },
     };
 }
 
