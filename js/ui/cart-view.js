@@ -1,5 +1,5 @@
 import { $, createButton, createElement, createIcon } from "../dom.js";
-import { formatCoins, formatPrice } from "../format.js";
+import { formatCoins } from "../format.js";
 import * as Account from "../features/account.js";
 import * as Cart from "../features/cart.js";
 import {
@@ -53,7 +53,7 @@ function renderLine({ id, quantity, product }) {
             createElement("strong", { className: "line__title", text: product.nome }),
             createElement("span", {
                 className: "line__meta",
-                text: `${unitPrice} · ${formatPrice(product.preco)} por unidade`,
+                text: `${unitPrice} por unidade`,
             }),
         ]),
         createElement("div", { className: "stepper" }, [
@@ -110,7 +110,6 @@ function renderFooter({ profile, isCheckingOut }, lines) {
 
     return createElement("div", { className: "drawer__footer" }, [
         createElement("dl", { className: "summary" }, [
-            summaryRow("Subtotal de referência", formatPrice(Cart.referenceTotal(lines))),
             summaryRow("Total em moedas", hasMissingPrice ? "—" : coinsLabel(total), "summary__row--total"),
             summaryRow(
                 "Saldo após a compra",
