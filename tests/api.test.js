@@ -3,6 +3,7 @@ import alunosHandler from "../api/auth/alunos.js";
 import loginHandler from "../api/auth/login.js";
 import checkoutHandler from "../api/loja/checkout.js";
 import perfilHandler from "../api/loja/perfil.js";
+import { clearPhotoCache } from "../lib/photos.js";
 import {
     createFakeStorage,
     createRequest,
@@ -31,6 +32,7 @@ const checkout = (cookie, itens, requestId = crypto.randomUUID()) =>
     call(checkoutHandler, { cookie, body: { itens, requestId } });
 
 beforeEach(() => {
+    clearPhotoCache();
     vi.stubEnv("SESSION_SECRET", "segredo-de-teste-com-mais-de-32-caracteres!");
     storage = createFakeStorage({ coinsnew: studentsFixture(), produtos: productsFixture() });
     vi.stubGlobal("fetch", storage.fetchMock);
@@ -49,6 +51,7 @@ describe("login", () => {
         expect(res.body).toEqual({
             id: 1,
             nome: "João Teste da Silva",
+            foto: null,
             moedas: 1000,
             ranking: { posicao: 1, total: 3 },
             inventario: [],
@@ -89,6 +92,38 @@ describe("login", () => {
         const res = await call(loginHandler, { body: { nome: "Maria Teste", senha: "abc" } });
         expect(res.statusCode).toBe(503);
         expect(res.body.erro).toBe("A loja ainda não foi configurada no servidor.");
+    });
+});
+
+describe("foto do aluno", () => {
+    const FOTO = "https://exemplo.supabase.co/storage/v1/object/public/fotos/joao.jpg";
+
+    function serveTurmaPhotos(rows, status = 200) {
+        const storageFetch = storage.fetchMock.getMockImplementation();
+        storage.fetchMock.mockImplementation(async (url, options) =>
+            String(url).includes("/rest/v1/aluno")
+                ? new Response(JSON.stringify(rows), { status })
+                : storageFetch(url, options),
+        );
+    }
+
+    it("traz a foto do cadastro da turma, ligando pelo nome sem acento", async () => {
+        serveTurmaPhotos([{ nome: "JOAO teste da silva", foto_url: FOTO }]);
+        const res = await call(loginHandler, { body: { nome: "João Teste da Silva", senha: "senha123" } });
+        expect(res.body.foto).toBe(FOTO);
+    });
+
+    it("ignora endereço de foto que não seja https", async () => {
+        serveTurmaPhotos([{ nome: "João Teste da Silva", foto_url: "javascript:alert(1)" }]);
+        const res = await call(loginHandler, { body: { nome: "João Teste da Silva", senha: "senha123" } });
+        expect(res.body.foto).toBeNull();
+    });
+
+    it("entra normalmente, sem foto, se o Supabase da turma falhar", async () => {
+        serveTurmaPhotos({ message: "fora do ar" }, 500);
+        const res = await call(loginHandler, { body: { nome: "João Teste da Silva", senha: "senha123" } });
+        expect(res.statusCode).toBe(200);
+        expect(res.body.foto).toBeNull();
     });
 });
 

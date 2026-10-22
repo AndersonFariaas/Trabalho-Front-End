@@ -25,14 +25,31 @@ export function thumbnail(product) {
     ]);
 }
 
+/**
+ * Foto do aluno (cadastro da turma) sobre as iniciais: se a foto faltar ou não carregar,
+ * as iniciais continuam aparecendo.
+ */
+function renderAvatar(profile) {
+    const avatar = createElement("span", {
+        className: "profile-card__avatar",
+        text: initials(profile.nome),
+        attrs: { "aria-hidden": "true" },
+    });
+    if (profile.foto) {
+        const photo = createElement("img", {
+            className: "profile-card__photo",
+            attrs: { src: profile.foto, alt: "", decoding: "async" },
+        });
+        photo.addEventListener("error", () => photo.remove(), { once: true });
+        avatar.append(photo);
+    }
+    return avatar;
+}
+
 /** Cartão com avatar, nome e saldo do aluno (topo dos dois painéis). */
 export function renderStudentCard(profile) {
     return createElement("div", { className: "profile-card" }, [
-        createElement("span", {
-            className: "profile-card__avatar",
-            text: initials(profile.nome),
-            attrs: { "aria-hidden": "true" },
-        }),
+        renderAvatar(profile),
         createElement("div", { className: "profile-card__info" }, [
             createElement("span", { className: "profile-card__eyebrow", text: "Perfil do aluno" }),
             createElement("strong", { className: "profile-card__name", text: profile.nome }),
