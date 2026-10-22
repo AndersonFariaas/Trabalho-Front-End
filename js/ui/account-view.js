@@ -39,7 +39,7 @@ function renderHeader({ profile, products, cart }) {
             [createIcon("coin"), formatCoins(profile.moedas)],
         ),
         createButton(`Carrinho (${itemCount})`, "ghost", openCart),
-        createButton("Meu Perfil", "primary", openProfile),
+        createButton("Meu perfil", "primary", openProfile),
         createButton("Sair", "ghost", Account.logout),
     );
 }

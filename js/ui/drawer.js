@@ -53,7 +53,7 @@ export function sectionHeading(title, count) {
 
 /** Estado vazio com atalho para o catálogo (fecha o painel e rola até os produtos). */
 export function emptyState(icon, message, modalId) {
-    const explore = createButton("Explorar Catálogo", "ghost", () => {
+    const explore = createButton("Explorar catálogo", "ghost", () => {
         closeModal(modalId);
         document.getElementById("produtos")?.scrollIntoView();
     });
