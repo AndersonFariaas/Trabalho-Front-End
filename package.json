@@ -1,0 +1,29 @@
+{
+  "name": "senai-shop",
+  "private": true,
+  "type": "module",
+  "description": "Loja do SENAI FIRJAN integrada ao sistema de moedas da turma.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node scripts/servidor-local.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run lint && npm run format:check && npm test"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.17.0",
+    "eslint": "9.17.0",
+    "globals": "15.14.0",
+    "prettier": "3.4.2",
+    "vitest": "2.1.8"
+  }
+}
