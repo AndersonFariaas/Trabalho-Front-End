@@ -2,14 +2,16 @@ import { MESSAGES, PRODUCTS_REFRESH_MS } from "./config.js";
 import * as Account from "./features/account.js";
 import { fetchProducts } from "./services/products.js";
 import { initAccountView } from "./ui/account-view.js";
-import { createCarousel } from "./ui/carousel.js";
+import { createFeaturedCarousel } from "./ui/featured-carousel.js";
 import { renderProducts, showMessageInEmptyGrids } from "./ui/catalog-view.js";
+import { initHeader } from "./ui/header.js";
 import { initMobileMenu } from "./ui/menu.js";
 import { initModals } from "./ui/modal.js";
 import { initNewsletter } from "./ui/newsletter.js";
+import { openProductDetail } from "./ui/product-view.js";
 import { initThemeToggle } from "./ui/theme.js";
 
-const carousel = createCarousel();
+const carousel = createFeaturedCarousel({ onSelect: openProductDetail });
 let lastCatalogSignature = "";
 let isLoadingProducts = false;
 
@@ -46,6 +48,7 @@ async function loadProducts() {
 }
 
 initModals();
+initHeader();
 initMobileMenu();
 initNewsletter();
 initThemeToggle();

@@ -2,8 +2,8 @@ export const PRODUCTS_URL = "https://onlinestorage.you.tec.br/api/getkey/senai/p
 export const PRODUCTS_TIMEOUT_MS = 10_000;
 export const PRODUCTS_REFRESH_MS = 30_000;
 
-export const CAROUSEL_INTERVAL_MS = 4_000;
-export const CAROUSEL_MAX_SLIDES = 5;
+/** Quantos produtos aleatórios entram na faixa de destaques. */
+export const FEATURED_COUNT = 12;
 export const TOAST_DURATION_MS = 2_800;
 
 export const TOTAL_CATEGORIES = 9;
