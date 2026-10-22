@@ -1506,17 +1506,11 @@ p {
 }
 
 /* Ranking da turma no painel do aluno */
-.ranking-stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin: 12px 20px 0;
-}
-
 .ranking-stat {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin: 12px 20px 0;
     padding: 12px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -1540,7 +1534,7 @@ p {
 }
 
 /* Pódio (1º ao 3º): troféu dourado */
-.ranking-stats--podium .ranking-stat:first-child .ranking-stat__icon {
+.ranking-stat--podium .ranking-stat__icon {
     background: rgb(245 158 11 / 0.15);
     color: var(--gold);
 }
