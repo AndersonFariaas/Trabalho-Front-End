@@ -28,6 +28,12 @@ export const accountStore = createStore({
 // após uma falha de rede reutiliza o id, e o servidor não cobra duas vezes.
 let pendingCheckout = null;
 
+// As leituras do perfil podem voltar fora de ordem: a que sai ao abrir o carrinho pode chegar
+// depois da resposta da compra e trazer de volta o saldo antigo. Cada leitura leva o número da
+// vez; compra, login e saída também avançam o número, e uma resposta atrasada é descartada.
+let profileVersion = 0;
+const invalidatePendingProfileReads = () => ++profileVersion;
+
 const getState = () => accountStore.getState();
 
 function updateCart(cart) {
@@ -38,11 +44,13 @@ function updateCart(cart) {
 
 function startSession(profile) {
     pendingCheckout = null;
+    invalidatePendingProfileReads(); // uma leitura de antes do login diria "visitante"
     accountStore.setState({ profile, cart: Cart.loadCart(profile.id) });
 }
 
 function endSession() {
     pendingCheckout = null;
+    invalidatePendingProfileReads();
     accountStore.setState({ profile: null, cart: [], isCheckingOut: false });
 }
 
@@ -72,8 +80,11 @@ export function setProducts(products) {
 
 /** Restaura a sessão (cookie HttpOnly) e atualiza saldo e inventário. */
 export async function refreshProfile({ quiet = false } = {}) {
+    const version = invalidatePendingProfileReads();
+    const isOutdated = () => version !== profileVersion;
     try {
         const profile = await shopApi.getProfile();
+        if (isOutdated()) return Boolean(getState().profile);
         if (!profile) {
             endSession(); // visitante sem login
             return false;
@@ -82,6 +93,7 @@ export async function refreshProfile({ quiet = false } = {}) {
         else startSession(profile);
         return true;
     } catch (error) {
+        if (isOutdated()) return Boolean(getState().profile);
         // 401 = sessão expirada: o aluno precisa entrar de novo.
         if (error.status === 401) {
             endSession();
@@ -208,10 +220,12 @@ export async function checkout() {
     }
 
     const itens = lines.map(({ id, quantity }) => ({ id, quantidade: quantity }));
+    invalidatePendingProfileReads(); // leitura iniciada antes da compra traria o saldo antigo
     accountStore.setState({ isCheckingOut: true });
     try {
         const updatedProfile = await shopApi.checkout(itens, checkoutRequestId(itens));
         pendingCheckout = null;
+        invalidatePendingProfileReads(); // e também a que começou durante a compra
         accountStore.setState({ profile: updatedProfile });
         updateCart([]);
         return true; // a confirmação visual fica com a tela (animação de compra)
