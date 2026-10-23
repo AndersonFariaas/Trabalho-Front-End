@@ -1,5 +1,6 @@
 import { createButton, createElement, createIcon, createProductImage } from "../dom.js";
 import { formatCoins } from "../format.js";
+import { createBalance } from "./balance.js";
 import { closeModal } from "./modal.js";
 
 /** Peças compartilhadas pelos painéis laterais do aluno (perfil e carrinho). */
@@ -46,17 +47,22 @@ function renderAvatar(profile) {
     return avatar;
 }
 
-/** Cartão com avatar, nome e saldo do aluno (topo dos dois painéis). */
-export function renderStudentCard(profile) {
+/**
+ * Cartão com avatar, nome e saldo do aluno (topo dos dois painéis).
+ *
+ * @param {{ badge?: HTMLElement | null }} [options] badge: selo abaixo do nome (ex.: posição no ranking)
+ */
+export function renderStudentCard(profile, { badge } = {}) {
     return createElement("div", { className: "profile-card" }, [
         renderAvatar(profile),
         createElement("div", { className: "profile-card__info" }, [
             createElement("span", { className: "profile-card__eyebrow", text: "Perfil do aluno" }),
             createElement("strong", { className: "profile-card__name", text: profile.nome }),
+            ...(badge ? [badge] : []),
         ]),
         createElement("div", { className: "profile-card__balance" }, [
             createElement("span", { text: "Saldo de moedas" }),
-            createElement("strong", {}, [createIcon("coin"), formatCoins(profile.moedas)]),
+            createBalance(profile, { tag: "strong" }),
         ]),
     ]);
 }
