@@ -20,30 +20,41 @@ import { isModalOpen, openModal } from "./modal.js";
 const PROFILE_MODAL = "perfil-modal";
 const content = $("#perfil-conteudo");
 
-function renderInventoryLine(item, products) {
-    return createElement("li", { className: "line" }, [
+/** Produtos da compra que acabou de ser feita (id → quantidade), em destaque até o painel fechar. */
+let justPurchased = new Map();
+
+function renderInventoryLine(item, products, highlightOrder) {
+    const addedQuantity = justPurchased.get(item.id);
+    const line = createElement("li", { className: "line" }, [
         thumbnail(products.get(item.id)),
         createElement("div", { className: "line__info" }, [
             createElement("strong", { className: "line__title", text: item.nome }),
-            createElement("span", { className: "line__meta", text: formatUnits(item.quantidade) }),
+            createElement("span", { className: "line__meta" }, [
+                formatUnits(item.quantidade),
+                ...(addedQuantity
+                    ? [createElement("span", { className: "line__added", text: `+${addedQuantity} agora` })]
+                    : []),
+            ]),
         ]),
         coinsLabel(item.preco_moedas),
     ]);
+    if (addedQuantity) {
+        line.classList.add("line--new");
+        line.style.setProperty("--highlight-order", String(highlightOrder.next++));
+    }
+    return line;
 }
 
 const PODIUM_SIZE = 3;
 
-/** Posição do aluno no ranking da turma (pelas moedas ganhas: compras na loja não alteram). */
-function renderRanking({ posicao, total }) {
-    const stat = createElement("div", { className: "ranking-stat" }, [
-        createElement("span", { className: "ranking-stat__icon" }, [createIcon("trophy")]),
-        createElement("div", { className: "ranking-stat__text" }, [
-            createElement("span", { className: "ranking-stat__label", text: "Posição no ranking" }),
-            createElement("strong", { className: "ranking-stat__value", text: `${posicao}º de ${total}` }),
-        ]),
+/** Selo com a posição no ranking da turma (pelas moedas ganhas: compras na loja não alteram). */
+function renderRankingBadge({ posicao, total }) {
+    const badge = createElement("span", { className: "ranking-badge" }, [
+        createIcon("trophy"),
+        `${posicao}º de ${total} no ranking`,
     ]);
-    stat.classList.toggle("ranking-stat--podium", posicao <= PODIUM_SIZE);
-    return stat;
+    badge.classList.toggle("ranking-badge--podium", posicao <= PODIUM_SIZE);
+    return badge;
 }
 
 function renderProfile(state) {
@@ -54,31 +65,50 @@ function renderProfile(state) {
     }
 
     const inventory = [...state.profile.inventario].sort((a, b) => b.preco_moedas - a.preco_moedas);
+    const highlightOrder = { next: 0 }; // os itens novos brilham um após o outro
     const panel = createElement("div", { className: "drawer__panel" }, [
         inventory.length > 0
             ? createElement(
                   "ul",
                   { className: "lines", attrs: { "aria-label": "Produtos comprados" } },
-                  inventory.map((item) => renderInventoryLine(item, state.products)),
+                  inventory.map((item) => renderInventoryLine(item, state.products, highlightOrder)),
               )
             : emptyState("box", "Seu inventário ainda está vazio.", PROFILE_MODAL),
     ]);
 
+    const { ranking } = state.profile;
     replaceDrawerContent(content, [
-        renderStudentCard(state.profile),
-        ...(state.profile.ranking ? [renderRanking(state.profile.ranking)] : []),
+        renderStudentCard(state.profile, { badge: ranking ? renderRankingBadge(ranking) : null }),
         sectionHeading("Inventário", inventory.length),
         panel,
     ]);
 }
 
-export function openProfile() {
+/** Rola a lista até o primeiro item novo, se ele estiver fora da área visível. */
+function revealFirstNewItem() {
+    const panel = content.querySelector(".drawer__panel");
+    const line = panel?.querySelector(".line--new");
+    if (!line) return;
+    // As duas medidas sofrem a mesma transformação da entrada do painel: a diferença é exata
+    const lineBox = line.getBoundingClientRect();
+    const panelBox = panel.getBoundingClientRect();
+    if (lineBox.bottom > panelBox.bottom) panel.scrollTop += lineBox.top - panelBox.top - 12;
+}
+
+/**
+ * @param {{ highlight?: Map<string, number> }} [options] highlight: itens da compra recém-feita
+ * (o perfil acabou de vir do servidor junto com a compra, então não é consultado de novo)
+ */
+export function openProfile({ highlight } = {}) {
+    justPurchased = highlight ?? new Map();
     content.replaceChildren(); // abre sempre do topo da lista
     openModal(PROFILE_MODAL);
     renderProfile(Account.accountStore.getState());
-    void Account.refreshProfile({ quiet: true });
+    revealFirstNewItem();
+    if (!highlight) void Account.refreshProfile({ quiet: true });
 }
 
 export function initProfileView() {
     Account.accountStore.subscribe(renderProfile);
+    $(`#${PROFILE_MODAL}`).addEventListener("close", () => (justPurchased = new Map()));
 }
