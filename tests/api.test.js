@@ -56,6 +56,11 @@ describe("login", () => {
             foto: null,
             moedas: 1000,
             ranking: { posicao: 1, total: 3 },
+            nivel: {
+                atual: { id: "aspirante", nome: "Aspirante a programador" },
+                proximo: { id: "explorador", nome: "Explorador de Códigos", faltam: 1003 },
+                progresso: 0.428,
+            },
             inventario: [],
         });
         expect(JSON.stringify(res.body)).not.toContain("senha");
@@ -211,6 +216,7 @@ describe("ranking separado do saldo", () => {
         expect(joao.moedas_gastas).toBe(700);
         expect(res.body.moedas).toBe(300);
         expect(res.body.ranking).toEqual({ posicao: 1, total: 3 });
+        expect(res.body.nivel.atual.id).toBe("aspirante"); // comprar também não tira o nível
     });
 
     it("soma os gastos de várias compras e usa o saldo disponível para validar", async () => {
