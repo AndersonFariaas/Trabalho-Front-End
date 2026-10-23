@@ -43,6 +43,7 @@
         <link rel="modulepreload" href="js/ui/drawer.js" />
         <link rel="modulepreload" href="js/ui/featured-carousel.js" />
         <link rel="modulepreload" href="js/ui/header.js" />
+        <link rel="modulepreload" href="js/ui/level-view.js" />
         <link rel="modulepreload" href="js/ui/menu.js" />
         <link rel="modulepreload" href="js/ui/modal.js" />
         <link rel="modulepreload" href="js/ui/newsletter.js" />
@@ -52,6 +53,7 @@
         <link rel="modulepreload" href="js/ui/reveal.js" />
         <link rel="modulepreload" href="js/ui/theme.js" />
         <link rel="modulepreload" href="js/ui/toast.js" />
+        <link rel="modulepreload" href="shared/levels.js" />
         <link rel="modulepreload" href="shared/products.js" />
     </head>
 
@@ -110,6 +112,33 @@
             </symbol>
             <symbol id="i-trash" viewBox="0 0 24 24">
                 <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6" />
+            </symbol>
+            <!-- Emblemas do "Meu nível" -->
+            <symbol id="i-terminal" viewBox="0 0 24 24">
+                <path d="m5 7 5 5-5 5M12 17h7" />
+            </symbol>
+            <symbol id="i-compass" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path d="m15.5 8.5-2 5-5 2 2-5z" />
+            </symbol>
+            <symbol id="i-bulb" viewBox="0 0 24 24">
+                <path d="M9 18h6M10 21h4" />
+                <path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1v.1h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z" />
+            </symbol>
+            <symbol id="i-school" viewBox="0 0 24 24">
+                <path d="m2 9 10-5 10 5-10 5z" />
+                <path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v6" />
+            </symbol>
+            <symbol id="i-shield" viewBox="0 0 24 24">
+                <path d="M12 3 5 6v6c0 4.4 3 7.6 7 9 4-1.4 7-4.6 7-9V6z" />
+                <path d="m13 8-3 5h4l-3 4" />
+            </symbol>
+            <symbol id="i-crown" viewBox="0 0 24 24">
+                <path d="m3 8 4.5 4L12 5l4.5 7L21 8l-2 11H5z" />
+            </symbol>
+            <symbol id="i-lock" viewBox="0 0 24 24">
+                <rect x="5" y="11" width="14" height="10" rx="2" />
+                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
             </symbol>
         </svg>
 
@@ -588,6 +617,20 @@
                 </div>
                 <!-- Perfil e inventário são carregados pelo JavaScript. -->
                 <div class="drawer__content" id="perfil-conteudo"></div>
+            </div>
+        </dialog>
+
+        <!-- REGRAS DOS NÍVEIS (aberto pelo "Meu nível" no painel do aluno) -->
+        <dialog class="modal modal--levels" id="niveis-modal" aria-labelledby="niveis-title">
+            <div class="modal__panel">
+                <div class="modal__header">
+                    <h3 id="niveis-title">Níveis do SENAI Shop</h3>
+                    <button class="icon-btn" type="button" data-close-modal aria-label="Fechar">
+                        <svg class="icon" aria-hidden="true"><use href="#i-close" /></svg>
+                    </button>
+                </div>
+                <!-- Regras, nível atual e a lista de níveis são carregados pelo JavaScript. -->
+                <div class="modal__body levels-modal" id="niveis-conteudo"></div>
             </div>
         </dialog>
 

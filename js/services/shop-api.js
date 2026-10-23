@@ -4,7 +4,9 @@
  *
  * @typedef {{ id: string, nome: string, quantidade: number, preco_moedas: number }} InventoryItem
  * @typedef {{ posicao: number, total: number }} Ranking
- * @typedef {{ id: number, nome: string, foto: string | null, moedas: number, ranking: Ranking, inventario: InventoryItem[] }} Profile
+ * @typedef {import("../../shared/levels.js").LevelRef} LevelRef
+ * @typedef {import("../../shared/levels.js").LevelInfo} LevelInfo
+ * @typedef {{ id: number, nome: string, foto: string | null, moedas: number, ranking: Ranking, nivel: LevelInfo, inventario: InventoryItem[] }} Profile
  */
 
 class ApiError extends Error {
