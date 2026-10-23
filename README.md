@@ -11,6 +11,7 @@ Projeto do curso Técnico em Desenvolvimento de Sistemas.
 - **Carrinho** no topo com contador (o produto "voa" até ele) e painel próprio; **compra** que desconta do saldo, sem cobrança dupla, com tela de confirmação e o saldo contando até o valor novo.
 - **Painel do aluno** com foto (do cadastro da turma), saldo, posição no ranking e inventário.
 - **Ranking preservado:** comprar desconta só do saldo; a pontuação do ranking não muda.
+- **Meu nível:** emblemas conquistados pelas moedas do ranking (Aspirante a programador, Explorador de Códigos, Programador sagaz, Mestre de programação, Hacker e Programador Lendário), com barra de progresso até o próximo; tocar no nível abre as regras de todos os níveis. As moedas de cada nível ficam em `shared/levels.js`.
 - Tema claro/escuro, responsivo, acessível e com animações que respeitam quem prefere menos movimento.
 
 ## Como testar no seu computador
