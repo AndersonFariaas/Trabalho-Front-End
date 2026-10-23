@@ -16,6 +16,8 @@
     --radius-xl: 28px;
     --radius-pill: 999px;
 
+    --hexagon: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+
     --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     --duration: 0.25s;
@@ -1677,13 +1679,18 @@ p {
     height: 22px;
 }
 
-/* Posição no ranking da turma: selo abaixo do nome, no cartão do aluno */
-.ranking-badge {
+/* Selos abaixo do nome no cartão do aluno: posição no ranking e "Meu nível" */
+.profile-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.profile-badge {
     display: inline-flex;
     align-items: center;
-    justify-self: start;
     gap: 5px;
-    margin-top: 4px;
     padding: 3px 10px 3px 8px;
     border-radius: var(--radius-pill);
     background: var(--accent-soft);
@@ -1695,15 +1702,343 @@ p {
     white-space: nowrap;
 }
 
-.ranking-badge .icon {
+.profile-badge .icon {
     width: 14px;
     height: 14px;
 }
 
 /* Pódio (1º ao 3º): troféu dourado */
-.ranking-badge--podium {
+.profile-badge--podium {
     background: rgb(245 158 11 / 0.15);
     color: var(--gold-strong);
+}
+
+/* "Meu nível" (js/ui/level-view.js). Cada nível tem a sua cor:
+   --level preenche emblema e barra, --level-ink é o ícone sobre ela e
+   --level-text é o texto do selo (mais escuro no tema claro, para contraste AA). */
+.level--aspirante {
+    --level: #4ade80;
+    --level-ink: #052e16;
+    --level-text: #166534;
+}
+
+.level--explorador {
+    --level: #22d3ee;
+    --level-ink: #083344;
+    --level-text: #155e75;
+}
+
+.level--sagaz {
+    --level: #60a5fa;
+    --level-ink: #0c1d3d;
+    --level-text: #1d4ed8;
+}
+
+.level--mestre {
+    --level: #a78bfa;
+    --level-ink: #1e1047;
+    --level-text: #6d28d9;
+}
+
+.level--hacker {
+    --level: #fb923c;
+    --level-ink: #3b1405;
+    --level-text: #9a3412;
+}
+
+.level--lendario {
+    --level: #fbbf24;
+    --level-ink: #3b2402;
+    --level-text: #92400e;
+}
+
+[data-theme="dark"] .level-badge,
+[data-theme="dark"] .levels-modal__current {
+    --level-text: var(--level);
+}
+
+.level-badge {
+    background: color-mix(in srgb, var(--level, var(--accent)) 16%, transparent);
+    color: var(--level-text, var(--accent-strong));
+}
+
+/* O selo do cartão é um botão: abre as regras dos níveis */
+button.level-badge {
+    transition: box-shadow var(--duration) var(--ease);
+}
+
+@media (hover: hover) {
+    button.level-badge:hover {
+        box-shadow: 0 0 0 1px var(--level, var(--accent));
+    }
+}
+
+.profile-card__avatar-wrap {
+    position: relative;
+    display: inline-grid;
+}
+
+/* Emblema hexagonal. No avatar, o aro na cor do cartão o separa da foto */
+.level-emblem {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 26px;
+    height: 29px;
+    clip-path: var(--hexagon);
+    background: var(--surface);
+}
+
+.profile-card__avatar-wrap > .level-emblem {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+}
+
+.level-emblem__core {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 25px;
+    clip-path: var(--hexagon);
+    background: var(--level, var(--accent));
+    color: var(--level-ink, var(--on-accent));
+}
+
+.level-emblem .icon {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.4;
+}
+
+/* Barra do cartão: também é um botão que abre as regras dos níveis */
+.level-progress {
+    display: grid;
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    gap: 6px;
+    margin: 8px -8px -8px;
+    padding: 8px;
+    border-radius: var(--radius);
+    text-align: left;
+    transition: background-color var(--duration) var(--ease);
+}
+
+@media (hover: hover) {
+    .level-progress:hover {
+        background: var(--accent-soft);
+    }
+}
+
+.level-progress__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.level-progress__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--accent-strong);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.level-progress__more .icon {
+    width: 14px;
+    height: 14px;
+}
+
+.level-progress__label {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.level-progress__bar {
+    display: block;
+    height: 6px;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--border);
+}
+
+.level-progress__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--level, var(--accent));
+    transform: scaleX(var(--progress, 0));
+    transform-origin: left center;
+}
+
+.level-progress__caption {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+/* Ao abrir o painel: o emblema surge e a barra enche até o progresso atual */
+.profile-card.is-opening .level-emblem {
+    animation: pop-in 0.6s var(--ease-spring) 0.25s both;
+}
+
+.profile-card.is-opening .level-progress__fill {
+    animation: fill-from-zero 0.9s var(--ease) 0.35s both;
+}
+
+/* Regras dos níveis (modal aberto pelo "Meu nível"): largura para nome e "✓ Conquistado" lado a lado */
+.modal--levels {
+    --modal-width: 460px;
+}
+
+.levels-modal {
+    display: grid;
+    gap: 16px;
+}
+
+.levels-modal__intro {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.levels-modal__intro strong {
+    color: var(--text);
+}
+
+.levels-modal__current {
+    display: grid;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--level, var(--accent)) 45%, var(--border));
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
+}
+
+.levels-modal__current-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.levels-modal__current-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.levels-modal__eyebrow {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.levels-modal__current-name {
+    color: var(--level-text, var(--text));
+    font-size: 1.05rem;
+}
+
+.levels-list {
+    display: grid;
+    gap: 8px;
+}
+
+.levels-list__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elevated);
+}
+
+.levels-list__item.is-current {
+    border-color: var(--level);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--level) 18%, transparent);
+}
+
+/* Emblemas maiores e sem aro no modal */
+.levels-modal .level-emblem,
+.levels-modal .level-emblem__core {
+    width: 34px;
+    height: 38px;
+    background: var(--level, var(--accent));
+}
+
+.levels-modal .level-emblem .icon {
+    width: 17px;
+    height: 17px;
+}
+
+.levels-list__text {
+    display: grid;
+    flex: 1;
+    justify-items: start;
+    gap: 2px;
+    min-width: 0;
+}
+
+.levels-list__name {
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.levels-list__min {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.levels-list__text .profile-badge {
+    margin-top: 4px;
+}
+
+.levels-list__mark {
+    flex-shrink: 0;
+}
+
+.levels-list__lock {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    color: var(--text-muted);
+}
+
+.levels-list__lock .icon {
+    width: 18px;
+    height: 18px;
+}
+
+.levels-list__item.is-locked .level-emblem {
+    filter: grayscale(1);
+    opacity: 0.45;
+}
+
+.levels-list__item.is-locked .levels-list__name {
+    color: var(--text-muted);
+}
+
+/* Celular: só o ✓, para o nome do nível caber numa linha ("Conquistado" segue para leitores de tela) */
+@media (max-width: 480px) {
+    .levels-list__mark {
+        padding: 4px;
+    }
+
+    .levels-list__mark-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+    }
 }
 
 .drawer__heading {
@@ -2390,6 +2725,12 @@ p {
 @keyframes grow-x {
     to {
         transform: scaleX(1);
+    }
+}
+
+@keyframes fill-from-zero {
+    from {
+        transform: scaleX(0);
     }
 }
 

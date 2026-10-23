@@ -10,10 +10,11 @@ import {
     sessionExpiredMessage,
     thumbnail,
 } from "./drawer.js";
+import { renderLevelBadge, renderLevelEmblem, renderLevelProgress } from "./level-view.js";
 import { isModalOpen, openModal } from "./modal.js";
 
 /**
- * Painel do aluno: nome, saldo e o inventário com os produtos comprados.
+ * Painel do aluno: nome, saldo, ranking, "Meu nível" e o inventário com os produtos comprados.
  * Redesenhado a partir do estado da conta.
  */
 
@@ -22,6 +23,9 @@ const content = $("#perfil-conteudo");
 
 /** Produtos da compra que acabou de ser feita (id → quantidade), em destaque até o painel fechar. */
 let justPurchased = new Map();
+
+// O emblema e a barra do nível animam só ao abrir o painel, não a cada atualização do estado
+let isOpening = false;
 
 function renderInventoryLine(item, products, highlightOrder) {
     const addedQuantity = justPurchased.get(item.id);
@@ -49,12 +53,25 @@ const PODIUM_SIZE = 3;
 
 /** Selo com a posição no ranking da turma (pelas moedas ganhas: compras na loja não alteram). */
 function renderRankingBadge({ posicao, total }) {
-    const badge = createElement("span", { className: "ranking-badge" }, [
+    const badge = createElement("span", { className: "profile-badge" }, [
         createIcon("trophy"),
         `${posicao}º de ${total} no ranking`,
     ]);
-    badge.classList.toggle("ranking-badge--podium", posicao <= PODIUM_SIZE);
+    badge.classList.toggle("profile-badge--podium", posicao <= PODIUM_SIZE);
     return badge;
+}
+
+/** Cartão do aluno com ranking e "Meu nível" (emblema no avatar, selo e progresso). */
+function renderProfileCard(profile) {
+    const { ranking, nivel } = profile;
+    const card = renderStudentCard(profile, {
+        badges: [ranking && renderRankingBadge(ranking), nivel?.atual && renderLevelBadge(nivel)].filter(Boolean),
+        avatarEmblem: nivel?.atual ? renderLevelEmblem(nivel.atual) : null,
+        details: nivel ? renderLevelProgress(nivel) : null,
+    });
+    card.classList.toggle("is-opening", isOpening);
+    isOpening = false;
+    return card;
 }
 
 function renderProfile(state) {
@@ -76,9 +93,8 @@ function renderProfile(state) {
             : emptyState("box", "Seu inventário ainda está vazio.", PROFILE_MODAL),
     ]);
 
-    const { ranking } = state.profile;
     replaceDrawerContent(content, [
-        renderStudentCard(state.profile, { badge: ranking ? renderRankingBadge(ranking) : null }),
+        renderProfileCard(state.profile),
         sectionHeading("Inventário", inventory.length),
         panel,
     ]);
@@ -101,6 +117,7 @@ function revealFirstNewItem() {
  */
 export function openProfile({ highlight } = {}) {
     justPurchased = highlight ?? new Map();
+    isOpening = true;
     content.replaceChildren(); // abre sempre do topo da lista
     openModal(PROFILE_MODAL);
     renderProfile(Account.accountStore.getState());

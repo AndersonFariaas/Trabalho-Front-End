@@ -50,20 +50,29 @@ function renderAvatar(profile) {
 /**
  * Cartão com avatar, nome e saldo do aluno (topo dos dois painéis).
  *
- * @param {{ badge?: HTMLElement | null }} [options] badge: selo abaixo do nome (ex.: posição no ranking)
+ * @param {object} [options]
+ * @param {HTMLElement[]} [options.badges] selos abaixo do nome (ranking, nível)
+ * @param {HTMLElement | null} [options.avatarEmblem] emblema no canto do avatar
+ * @param {HTMLElement | null} [options.details] bloco de largura total no fim do cartão (progresso do nível).
+ *   Fica abaixo do saldo para não cobrir o selo de diferença que aparece acima dele.
  */
-export function renderStudentCard(profile, { badge } = {}) {
+export function renderStudentCard(profile, { badges = [], avatarEmblem = null, details = null } = {}) {
+    const avatar = renderAvatar(profile);
     return createElement("div", { className: "profile-card" }, [
-        renderAvatar(profile),
+        // O avatar recorta a foto em círculo; o emblema fica num invólucro para poder sair da borda
+        avatarEmblem
+            ? createElement("span", { className: "profile-card__avatar-wrap" }, [avatar, avatarEmblem])
+            : avatar,
         createElement("div", { className: "profile-card__info" }, [
             createElement("span", { className: "profile-card__eyebrow", text: "Perfil do aluno" }),
             createElement("strong", { className: "profile-card__name", text: profile.nome }),
-            ...(badge ? [badge] : []),
+            ...(badges.length > 0 ? [createElement("div", { className: "profile-card__badges" }, badges)] : []),
         ]),
         createElement("div", { className: "profile-card__balance" }, [
             createElement("span", { text: "Saldo de moedas" }),
             createBalance(profile, { tag: "strong" }),
         ]),
+        ...(details ? [details] : []),
     ]);
 }
 
