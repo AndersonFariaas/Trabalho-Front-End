@@ -8,7 +8,7 @@ Projeto do curso Técnico em Desenvolvimento de Sistemas.
 
 - **Catálogo** lido da API da turma, com destaques aleatórios girando e 9 categorias.
 - **Login** com o nome e a senha do sistema de moedas, validado no servidor (com limite de tentativas).
-- **Carrinho** em painel próprio e **compra** que desconta do saldo, sem cobrança dupla.
+- **Carrinho** no topo com contador (o produto "voa" até ele) e painel próprio; **compra** que desconta do saldo, sem cobrança dupla, com tela de confirmação e o saldo contando até o valor novo.
 - **Painel do aluno** com foto (do cadastro da turma), saldo, posição no ranking e inventário.
 - **Ranking preservado:** comprar desconta só do saldo; a pontuação do ranking não muda.
 - Tema claro/escuro, responsivo, acessível e com animações que respeitam quem prefere menos movimento.

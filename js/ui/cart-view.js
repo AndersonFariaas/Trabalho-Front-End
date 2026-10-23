@@ -11,8 +11,10 @@ import {
     sessionExpiredMessage,
     thumbnail,
 } from "./drawer.js";
+import { holdBalance, releaseBalance } from "./balance.js";
 import { closeModal, isModalOpen, openModal } from "./modal.js";
 import { openProfile } from "./profile-view.js";
+import { renderPurchaseSuccess } from "./purchase-success.js";
 
 /**
  * Painel do carrinho: nome e saldo do aluno, itens com quantidade e o resumo da compra.
@@ -20,7 +22,12 @@ import { openProfile } from "./profile-view.js";
  */
 
 const CART_MODAL = "carrinho-modal";
+const SUCCESS_SCREEN_MS = 2400;
+const BALANCE_COUNT_DELAY_MS = 300; // espera o painel do perfil terminar de entrar
 const content = $("#carrinho-conteudo");
+
+// Enquanto a tela de compra confirmada aparece, o painel não é redesenhado pelo estado
+let successTimer = null;
 
 function stepperButton(label, ariaLabel, focusKey, onClick) {
     const button = createElement("button", {
@@ -79,11 +86,46 @@ function checkoutHint({ hasMissingPrice, isInsufficient }) {
     return "A confirmação do saldo e o débito são feitos no banco da turma.";
 }
 
+/** Sai da tela de confirmação; com goToProfile, abre o inventário com os itens novos em destaque. */
+function finishSuccessScreen(purchased, { goToProfile }) {
+    clearTimeout(successTimer);
+    successTimer = null;
+    if (goToProfile) {
+        closeModal(CART_MODAL);
+        openProfile({ highlight: new Map(purchased.map(({ id, quantity }) => [id, quantity])) });
+        setTimeout(releaseBalance, BALANCE_COUNT_DELAY_MS);
+        return;
+    }
+    releaseBalance();
+}
+
+function showSuccessScreen(purchased) {
+    content.replaceChildren(
+        renderPurchaseSuccess({
+            itemCount: Cart.countItems(purchased),
+            total: Cart.coinTotal(purchased),
+            durationMs: SUCCESS_SCREEN_MS,
+        }),
+    );
+    successTimer = setTimeout(() => finishSuccessScreen(purchased, { goToProfile: true }), SUCCESS_SCREEN_MS);
+    // Fechou o painel antes do tempo: o saldo conta no topo e o inventário não abre sozinho
+    $(`#${CART_MODAL}`).addEventListener(
+        "close",
+        () => {
+            if (successTimer) finishSuccessScreen(purchased, { goToProfile: false });
+        },
+        { once: true },
+    );
+}
+
 async function handleCheckout() {
-    if (!(await Account.checkout())) return;
-    // Depois de comprar, mostra o perfil com o item novo no inventário
-    closeModal(CART_MODAL);
-    openProfile();
+    const { cart, products } = Account.accountStore.getState();
+    const purchased = Cart.toCartLines(cart, products);
+
+    // O saldo novo chega com a resposta, mas só conta depois da confirmação na tela
+    holdBalance();
+    if (await Account.checkout()) showSuccessScreen(purchased);
+    else releaseBalance();
 }
 
 function summaryRow(label, value, className = "") {
@@ -123,7 +165,7 @@ function renderFooter({ profile, isCheckingOut }, lines) {
 }
 
 function renderCart(state) {
-    if (!isModalOpen(CART_MODAL)) return;
+    if (!isModalOpen(CART_MODAL) || successTimer) return;
     if (!state.profile) {
         content.replaceChildren(sessionExpiredMessage());
         return;

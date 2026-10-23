@@ -35,7 +35,9 @@
         <link rel="modulepreload" href="js/storage.js" />
         <link rel="modulepreload" href="js/store.js" />
         <link rel="modulepreload" href="js/ui/account-view.js" />
+        <link rel="modulepreload" href="js/ui/balance.js" />
         <link rel="modulepreload" href="js/ui/binary-rain.js" />
+        <link rel="modulepreload" href="js/ui/cart-button.js" />
         <link rel="modulepreload" href="js/ui/cart-view.js" />
         <link rel="modulepreload" href="js/ui/catalog-view.js" />
         <link rel="modulepreload" href="js/ui/drawer.js" />
@@ -46,6 +48,7 @@
         <link rel="modulepreload" href="js/ui/newsletter.js" />
         <link rel="modulepreload" href="js/ui/product-view.js" />
         <link rel="modulepreload" href="js/ui/profile-view.js" />
+        <link rel="modulepreload" href="js/ui/purchase-success.js" />
         <link rel="modulepreload" href="js/ui/reveal.js" />
         <link rel="modulepreload" href="js/ui/theme.js" />
         <link rel="modulepreload" href="js/ui/toast.js" />
@@ -137,6 +140,17 @@
                 </div>
 
                 <div class="nav__actions">
+                    <!-- Carrinho do aluno logado (contador e animações em js/ui/cart-button.js) -->
+                    <button
+                        class="icon-btn cart-button"
+                        id="cartButton"
+                        type="button"
+                        aria-label="Carrinho vazio"
+                        hidden
+                    >
+                        <svg class="icon" aria-hidden="true"><use href="#i-cart" /></svg>
+                        <span class="cart-button__badge" id="cartBadge" aria-hidden="true" hidden>0</span>
+                    </button>
                     <button id="botaoTema" class="icon-btn theme-toggle" type="button" aria-label="Alternar tema">
                         <svg class="icon icon--sun" aria-hidden="true"><use href="#i-sun" /></svg>
                         <svg class="icon icon--moon" aria-hidden="true"><use href="#i-moon" /></svg>
@@ -161,11 +175,11 @@
             <section class="hero" aria-labelledby="hero-title">
                 <div class="container">
                     <div class="hero__content">
-                        <p class="eyebrow eyebrow--pill">⚡ Tecnologia · Educação · Indústria</p>
-                        <h1 id="hero-title">Soluções do<br /><span class="text-gradient">Futuro, Hoje.</span></h1>
+                        <p class="eyebrow eyebrow--pill">🏆 Suas moedas valem prêmios</p>
+                        <h1 id="hero-title">Compre já no<br /><span class="text-gradient">SENAI Shop.</span></h1>
                         <p class="hero__copy">
-                            Descubra o portfólio de produtos e projetos desenvolvidos pelos alunos e profissionais da
-                            Firjan SENAI. Inovação que transforma a indústria.
+                            A loja online da Firjan SENAI. Tecnologia, moda, colecionáveis e muito mais esperando por
+                            você. Escolha, coloque no carrinho e pague com suas moedas em poucos cliques.
                         </p>
                         <div class="hero__actions">
                             <a class="btn btn--primary btn--lg" href="#produtos">
@@ -589,5 +603,8 @@
 
         <!-- TOAST -->
         <div class="toast" id="toast" popover="manual" role="status" aria-live="polite"></div>
+
+        <!-- Confirma para leitores de tela o produto que a animação levou ao carrinho -->
+        <p class="sr-only" id="cartStatus" role="status" aria-live="polite"></p>
     </body>
 </html>

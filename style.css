@@ -58,7 +58,10 @@
     --rain-rgb: 2 132 199;
     --rain-strength: 0.75;
     --danger: #dc2626;
+    --success: #16a34a;
+    --on-success: #ffffff;
     --gold: #d97706;
+    --gold-strong: #92400e; /* texto dourado sobre fundo claro (contraste AA) */
 }
 
 /* Tema escuro (padrão) */
@@ -95,7 +98,10 @@
     --rain-rgb: 56 189 248;
     --rain-strength: 1;
     --danger: #f87171;
+    --success: #4ade80;
+    --on-success: #052e16;
     --gold: #fbbf24;
+    --gold-strong: #fbbf24;
 }
 
 /* =====================================================
@@ -127,6 +133,11 @@ body {
     transition:
         background-color var(--duration) ease,
         color var(--duration) ease;
+}
+
+/* O atributo hidden vence o display dos componentes (ex.: .icon-btn usa inline-grid) */
+[hidden] {
+    display: none !important;
 }
 
 /* Trava a rolagem da página enquanto há um modal aberto */
@@ -387,6 +398,17 @@ p {
     border-radius: var(--radius-sm);
 }
 
+/* Confirmação rápida no botão depois de adicionar ao carrinho */
+.btn--primary.is-added {
+    background: var(--success);
+    color: var(--on-success);
+    box-shadow: 0 8px 24px -10px var(--success);
+}
+
+.btn.is-added .icon {
+    animation: pop-in 0.45s var(--ease-spring) both;
+}
+
 .btn--lg {
     padding: 14px 24px;
     font-size: 1rem;
@@ -559,6 +581,7 @@ p {
     font-size: 0.95rem;
     font-weight: 500;
     color: var(--text-muted);
+    white-space: nowrap;
     transition: color var(--duration) var(--ease);
 }
 
@@ -627,10 +650,120 @@ p {
     height: 16px;
 }
 
+/* Saldo animado (js/ui/balance.js): muda de cor enquanto conta e mostra a diferença acima */
+.balance {
+    position: relative;
+    transition: color 0.4s var(--ease);
+}
+
+.balance.is-decreasing {
+    color: var(--danger);
+}
+
+.balance.is-increasing {
+    color: var(--success);
+}
+
+.balance[data-delta]::after {
+    content: attr(data-delta);
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 6px;
+    padding: 3px 9px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--danger) 14%, var(--surface));
+    box-shadow: var(--shadow);
+    color: var(--danger);
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: nowrap;
+    pointer-events: none;
+    /* duração igual a DELTA_MS em balance.js; o atraso negativo continua a animação de um elemento recriado */
+    animation: balance-delta 2s var(--ease) both;
+    animation-delay: calc(var(--delta-elapsed, 0ms) * -1);
+}
+
+.balance[data-delta-direction="up"]::after {
+    background: color-mix(in srgb, var(--success) 16%, var(--surface));
+    color: var(--success);
+}
+
+.auth-area__balance[data-delta]::after {
+    right: auto;
+    left: 0;
+}
+
 .nav__actions {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* Ícone do carrinho com contador (js/ui/cart-button.js) */
+.cart-button {
+    position: relative;
+}
+
+.cart-button__badge {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-gradient);
+    box-shadow: 0 0 0 2px var(--bg);
+    color: var(--on-accent);
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 20px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+}
+
+.cart-button__ring {
+    position: absolute;
+    inset: -1px;
+    border: 2px solid var(--accent);
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+/* Cópia da foto que voa até o carrinho (popover: acima dos modais) */
+.cart-flyer {
+    position: fixed;
+    inset: auto;
+    z-index: 1000; /* navegador sem popover */
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: none;
+    pointer-events: none;
+}
+
+.cart-flyer__inner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--surface-2);
+    box-shadow:
+        0 0 0 2px var(--accent),
+        0 0 32px -6px var(--accent),
+        0 18px 40px -12px rgb(2 6 23 / 0.6);
+    will-change: transform;
+}
+
+.cart-flyer__inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Alterna os ícones do tema sem JavaScript extra */
@@ -1510,18 +1643,20 @@ p {
     white-space: nowrap;
 }
 
+/* Se rótulo e saldo não cabem lado a lado (celular, saldo de 4+ dígitos), o saldo desce inteiro */
 .profile-card__balance {
     display: flex;
+    flex-wrap: wrap;
     grid-column: 1 / -1;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 4px 12px;
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid var(--border);
 }
 
-.profile-card__balance span {
+.profile-card__balance > span {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
@@ -1530,6 +1665,8 @@ p {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    margin-left: auto;
+    white-space: nowrap;
     color: var(--accent);
     font-size: 1.35rem;
     font-variant-numeric: tabular-nums;
@@ -1540,58 +1677,33 @@ p {
     height: 22px;
 }
 
-/* Ranking da turma no painel do aluno */
-.ranking-stat {
-    display: flex;
+/* Posição no ranking da turma: selo abaixo do nome, no cartão do aluno */
+.ranking-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin: 12px 20px 0;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg-elevated);
-}
-
-.ranking-stat__icon {
-    display: grid;
-    flex-shrink: 0;
-    place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    justify-self: start;
+    gap: 5px;
+    margin-top: 4px;
+    padding: 3px 10px 3px 8px;
+    border-radius: var(--radius-pill);
     background: var(--accent-soft);
-    color: var(--accent);
+    color: var(--accent-strong);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
-.ranking-stat__icon .icon {
-    width: 18px;
-    height: 18px;
+.ranking-badge .icon {
+    width: 14px;
+    height: 14px;
 }
 
 /* Pódio (1º ao 3º): troféu dourado */
-.ranking-stat--podium .ranking-stat__icon {
+.ranking-badge--podium {
     background: rgb(245 158 11 / 0.15);
-    color: var(--gold);
-}
-
-.ranking-stat__text {
-    display: grid;
-    gap: 2px;
-    min-width: 0;
-}
-
-.ranking-stat__label {
-    color: var(--text-muted);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-
-.ranking-stat__value {
-    font-size: 1rem;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+    color: var(--gold-strong);
 }
 
 .drawer__heading {
@@ -1674,6 +1786,46 @@ p {
 .line__meta {
     color: var(--text-muted);
     font-size: 0.78rem;
+}
+
+/* Itens da compra recém-feita: brilham um após o outro no inventário */
+.line--new {
+    position: relative;
+    overflow: hidden;
+    border-color: var(--accent);
+    --highlight-delay: calc(var(--highlight-order, 0) * 140ms + 0.35s);
+    animation:
+        fade-up 0.3s var(--ease) both,
+        line-glow 1.6s var(--ease) var(--highlight-delay) both;
+}
+
+.line--new::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        color-mix(in srgb, var(--accent) 22%, transparent) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: line-shine 1s var(--ease) calc(var(--highlight-delay) + 0.1s) both;
+    pointer-events: none;
+}
+
+.line__added {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 0 7px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 18px;
+    white-space: nowrap;
+    animation: pop-in 0.5s var(--ease-spring) calc(var(--highlight-delay) + 0.15s) both;
 }
 
 .line .icon-btn--sm:hover {
@@ -1818,6 +1970,175 @@ p {
     color: var(--text-muted);
 }
 
+/* Compra confirmada (js/ui/purchase-success.js): ✓ desenhado, moedas saltando e resumo */
+.purchase-success {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 380px;
+    padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
+    text-align: center;
+}
+
+.purchase-success > * {
+    animation: fade-up 0.5s var(--ease) both;
+}
+
+.purchase-success > :nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.purchase-success > :nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.purchase-success > :nth-child(4) {
+    animation-delay: 0.7s;
+}
+
+.purchase-success > :nth-child(5) {
+    animation-delay: 0.85s;
+}
+
+.purchase-success__badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    margin-bottom: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    animation: pop-in 0.6s var(--ease-spring) both;
+}
+
+/* Onda que sai do selo quando ele se completa */
+.purchase-success__badge::after {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: success-ring 0.9s var(--ease) 0.7s;
+    pointer-events: none;
+}
+
+.purchase-success__check {
+    width: 76px;
+    height: 76px;
+    overflow: visible;
+}
+
+.purchase-success__circle {
+    fill: transparent;
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transform: rotate(-90deg);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+        draw-stroke 0.6s var(--ease) 0.1s forwards,
+        success-fill 0.35s var(--ease) 0.6s forwards;
+}
+
+.purchase-success__tick {
+    fill: none;
+    stroke: var(--on-accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-stroke 0.4s var(--ease) 0.75s forwards;
+}
+
+.purchase-success__burst {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.purchase-success__coin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    color: var(--gold);
+    filter: drop-shadow(0 2px 6px rgb(245 158 11 / 0.45));
+}
+
+.purchase-success__coin .icon {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2.2;
+}
+
+.purchase-success__title {
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.purchase-success__text {
+    max-width: 280px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.purchase-success__spent {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--danger) 12%, transparent);
+    color: var(--danger);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.purchase-success__spent .icon {
+    width: 16px;
+    height: 16px;
+}
+
+.purchase-success__next {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* Barra que enche no tempo até o inventário abrir sozinho */
+.purchase-success__progress {
+    display: block;
+    width: 160px;
+    height: 4px;
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    background: var(--border);
+}
+
+.purchase-success__progress::after {
+    content: "";
+    display: block;
+    height: 100%;
+    background: var(--accent-gradient);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: grow-x var(--success-duration, 2.4s) linear forwards;
+}
+
 /* Detalhe do produto (aberto pelos destaques) */
 .modal--product {
     --modal-width: 880px;
@@ -1924,9 +2245,9 @@ p {
         display 0.4s allow-discrete;
 }
 
+/* Sem pointer-events: o aviso não tem ações e não pode bloquear o toque no que está embaixo */
 .toast.is-visible,
 .toast:popover-open {
-    pointer-events: auto;
     opacity: 1;
     transform: translate(-50%, 0);
 }
@@ -2002,6 +2323,76 @@ p {
     }
 }
 
+@keyframes pop-in {
+    from {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+}
+
+@keyframes balance-delta {
+    0% {
+        opacity: 0;
+        transform: translateY(6px) scale(0.9);
+    }
+    12%,
+    70% {
+        opacity: 1;
+        transform: none;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes line-glow {
+    35% {
+        background-color: var(--accent-soft);
+        box-shadow:
+            0 0 0 3px var(--accent-soft),
+            0 0 28px -6px var(--accent);
+    }
+    100% {
+        box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+}
+
+@keyframes line-shine {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes draw-stroke {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes success-fill {
+    to {
+        fill: var(--accent);
+    }
+}
+
+@keyframes success-ring {
+    from {
+        opacity: 0.8;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.7);
+    }
+}
+
+@keyframes grow-x {
+    to {
+        transform: scaleX(1);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -2052,8 +2443,10 @@ p {
         display: inline-grid;
     }
 
+    /* Logo + carrinho, tema e menu cabem lado a lado até em 320px */
     .nav {
         justify-content: space-between;
+        gap: 12px;
     }
 
     .nav__panel {
@@ -2212,6 +2605,16 @@ p {
         max-height: 92dvh;
     }
 
+    /* Saldo um pouco menor: rótulo e valor de 4 dígitos cabem na mesma linha em 375px */
+    .profile-card__balance strong {
+        font-size: 1.2rem;
+    }
+
+    .profile-card__balance .icon {
+        width: 20px;
+        height: 20px;
+    }
+
     /* Puxador visual da folha */
     .drawer__bar {
         position: relative;
@@ -2280,5 +2683,23 @@ p {
     .product-grid {
         grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
         gap: 12px;
+    }
+
+    /* Cartões em duas colunas (a partir de 140px): moeda em cima e o preço inteiro numa linha,
+       igual em todos os cartões, em vez de "1.200 / moedas" quebrado ao lado do ícone */
+    .product-card__body {
+        padding: 12px 10px 14px;
+    }
+
+    .product-card__price {
+        flex-direction: column;
+        gap: 2px;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    .product-card__price .icon {
+        width: 18px;
+        height: 18px;
     }
 }

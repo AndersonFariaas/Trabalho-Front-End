@@ -1,15 +1,20 @@
 import { $, createButton, createElement, createIcon } from "../dom.js";
-import { formatCoins } from "../format.js";
 import * as Account from "../features/account.js";
-import * as Cart from "../features/cart.js";
-import { initCartView, openCart } from "./cart-view.js";
+import { createBalance, initBalance } from "./balance.js";
+import { addToCartWithAnimation, flightOrigin, initCartButton } from "./cart-button.js";
+import { initCartView } from "./cart-view.js";
+import { closeModal } from "./modal.js";
 import { initProfileView, openProfile } from "./profile-view.js";
 import { showToast } from "./toast.js";
 
 /**
  * View da conta no cabeçalho (saudação, saldo, botões) e formulário de login.
- * Os painéis ficam em cart-view.js (carrinho) e profile-view.js (perfil e inventário). Tudo é redesenhado a partir do estado da conta.
+ * Os painéis ficam em cart-view.js (carrinho) e profile-view.js (perfil e inventário); o ícone do
+ * carrinho no topo, em cart-button.js. Tudo é redesenhado a partir do estado da conta.
  */
+
+const PRODUCT_MODAL = "produto-modal";
+const ADDED_FEEDBACK_MS = 1400;
 
 const elements = {
     authArea: $("#auth-area"),
@@ -22,26 +27,55 @@ const elements = {
 
 /* ---------- Cabeçalho ---------- */
 
-function renderHeader({ profile, products, cart }) {
+function renderHeader({ profile }) {
     if (!profile) {
         elements.authArea.replaceChildren(createButton("Acesso do aluno", "primary", Account.openLogin));
         return;
     }
 
-    const itemCount = Cart.countItems(Cart.toCartLines(cart, products));
     elements.authArea.replaceChildren(
         createElement("span", { className: "auth-area__greeting", text: "Olá, " }, [
             createElement("strong", { text: profile.nome }),
         ]),
-        createElement(
-            "span",
-            { className: "auth-area__balance", attrs: { "aria-label": `Saldo: ${formatCoins(profile.moedas)}` } },
-            [createIcon("coin"), formatCoins(profile.moedas)],
-        ),
-        createButton(`Carrinho (${itemCount})`, "ghost", openCart),
-        createButton("Meu perfil", "primary", openProfile),
+        createBalance(profile, { className: "auth-area__balance", label: "Saldo: " }),
+        createButton("Meu perfil", "primary", () => openProfile()),
         createButton("Sair", "ghost", Account.logout),
     );
+}
+
+/* ---------- Adicionar ao carrinho ---------- */
+
+const addedFeedbackTimers = new WeakMap();
+
+/** O botão confirma por um instante ("✓ Adicionado") e volta ao texto original. */
+function showAddedFeedback(button) {
+    if (!addedFeedbackTimers.has(button)) {
+        const original = [...button.childNodes];
+        const restore = () => {
+            addedFeedbackTimers.delete(button);
+            button.classList.remove("is-added");
+            button.replaceChildren(...original);
+        };
+        addedFeedbackTimers.set(button, { restore });
+        button.classList.add("is-added");
+        button.replaceChildren(createIcon("check"), "Adicionado");
+    }
+    const feedback = addedFeedbackTimers.get(button);
+    clearTimeout(feedback.timer);
+    feedback.timer = setTimeout(feedback.restore, ADDED_FEEDBACK_MS);
+}
+
+function handleAddToCart(addButton) {
+    const productId = addButton.dataset.addToCart;
+    const image = addButton.closest(".product-card, .product-detail")?.querySelector("img");
+    const origin = flightOrigin(image); // antes de fechar o modal, enquanto a foto está na tela
+
+    // No detalhe do produto, adicionar fecha o modal; mais unidades se ajustam no carrinho
+    const isProductDetail = Boolean(addButton.closest(`#${PRODUCT_MODAL}`));
+    if (isProductDetail) closeModal(PRODUCT_MODAL);
+
+    const status = addToCartWithAnimation(productId, origin);
+    if (status === "added" && !isProductDetail) showAddedFeedback(addButton);
 }
 
 /* ---------- Login ---------- */
@@ -77,8 +111,10 @@ async function handleLoginSubmit(event) {
 /* ---------- Inicialização ---------- */
 
 export function initAccountView() {
+    initBalance();
     Account.accountStore.subscribe(renderHeader);
     renderHeader(Account.accountStore.getState());
+    initCartButton();
     initCartView();
     initProfileView();
 
@@ -94,6 +130,6 @@ export function initAccountView() {
     // Delegação: os cartões de produto são recriados a cada atualização da API.
     document.addEventListener("click", (event) => {
         const addButton = event.target.closest("[data-add-to-cart]");
-        if (addButton) Account.addToCart(addButton.dataset.addToCart);
+        if (addButton) handleAddToCart(addButton);
     });
 }

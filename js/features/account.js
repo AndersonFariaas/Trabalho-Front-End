@@ -150,16 +150,26 @@ function putInCart(productId) {
     return { added: true, nome: product.nome };
 }
 
+/**
+ * Recusas e o pedido de login viram aviso aqui; a confirmação de "adicionado" fica com a tela
+ * (animação do carrinho em ui/cart-button.js).
+ *
+ * @returns {"added" | "needs-login" | "rejected"}
+ */
 export function addToCart(productId) {
     if (!getState().profile) {
         productWaitingForLogin = productId;
         showToast("Entre na sua conta para adicionar produtos ao carrinho.");
         openLogin();
-        return;
+        return "needs-login";
     }
 
     const result = putInCart(productId);
-    showToast(result.added ? `"${result.nome}" foi adicionado ao carrinho.` : result.message);
+    if (!result.added) {
+        showToast(result.message);
+        return "rejected";
+    }
+    return "added";
 }
 
 export function changeQuantity(productId, delta) {
@@ -204,8 +214,7 @@ export async function checkout() {
         pendingCheckout = null;
         accountStore.setState({ profile: updatedProfile });
         updateCart([]);
-        showToast("Compra confirmada e inventário atualizado.");
-        return true;
+        return true; // a confirmação visual fica com a tela (animação de compra)
     } catch (error) {
         console.error("Erro ao finalizar a compra:", error);
         showToast(error.message || "Não foi possível concluir a compra.");
