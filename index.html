@@ -51,6 +51,7 @@
         <link rel="modulepreload" href="js/ui/profile-view.js" />
         <link rel="modulepreload" href="js/ui/purchase-success.js" />
         <link rel="modulepreload" href="js/ui/reveal.js" />
+        <link rel="modulepreload" href="js/ui/student-picker.js" />
         <link rel="modulepreload" href="js/ui/theme.js" />
         <link rel="modulepreload" href="js/ui/toast.js" />
         <link rel="modulepreload" href="shared/levels.js" />
@@ -557,22 +558,46 @@
                 </div>
                 <div class="modal__body">
                     <form id="auth-form" class="stack-form" novalidate>
-                        <label class="field">
-                            <span class="sr-only">Nome completo</span>
-                            <input
-                                class="input"
-                                type="text"
-                                id="auth-username"
-                                name="nome"
-                                autocomplete="username"
-                                autocapitalize="words"
-                                list="alunos-lista"
-                                autofocus
-                                placeholder="Seu nome completo"
-                                required
-                            />
-                            <datalist id="alunos-lista"></datalist>
-                        </label>
+                        <!-- Nome: lista dos alunos com busca (js/ui/student-picker.js) -->
+                        <div class="combobox">
+                            <div class="combobox__field">
+                                <label class="field">
+                                    <span class="sr-only">Nome completo</span>
+                                    <input
+                                        class="input combobox__input"
+                                        type="text"
+                                        id="auth-username"
+                                        name="nome"
+                                        role="combobox"
+                                        aria-autocomplete="list"
+                                        aria-expanded="false"
+                                        aria-controls="alunos-lista"
+                                        autocomplete="off"
+                                        autocapitalize="words"
+                                        spellcheck="false"
+                                        autofocus
+                                        placeholder="Seu nome completo"
+                                        required
+                                    />
+                                </label>
+                                <button
+                                    class="combobox__toggle"
+                                    type="button"
+                                    tabindex="-1"
+                                    aria-label="Mostrar lista de alunos"
+                                    aria-controls="alunos-lista"
+                                >
+                                    <svg class="icon" aria-hidden="true"><use href="#i-chevron-right" /></svg>
+                                </button>
+                            </div>
+                            <ul
+                                class="combobox__list"
+                                id="alunos-lista"
+                                role="listbox"
+                                aria-label="Alunos da turma"
+                                hidden
+                            ></ul>
+                        </div>
                         <label class="field">
                             <span class="sr-only">Senha</span>
                             <input

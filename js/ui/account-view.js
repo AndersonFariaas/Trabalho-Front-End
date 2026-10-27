@@ -5,6 +5,7 @@ import { addToCartWithAnimation, flightOrigin, initCartButton } from "./cart-but
 import { initCartView } from "./cart-view.js";
 import { closeModal } from "./modal.js";
 import { initProfileView, openProfile } from "./profile-view.js";
+import { initStudentPicker } from "./student-picker.js";
 import { showToast } from "./toast.js";
 
 /**
@@ -22,7 +23,6 @@ const elements = {
     submit: $("#auth-submit-btn"),
     name: $("#auth-username"),
     password: $("#auth-password"),
-    studentList: $("#alunos-lista"),
 };
 
 /* ---------- Cabeçalho ---------- */
@@ -80,13 +80,6 @@ function handleAddToCart(addButton) {
 
 /* ---------- Login ---------- */
 
-// Preenche o autocompletar do nome (útil no celular: os nomes têm acento).
-async function fillStudentNames() {
-    if (elements.studentList.childElementCount > 0) return;
-    const names = await Account.getStudentNames();
-    elements.studentList.replaceChildren(...names.map((nome) => createElement("option", { attrs: { value: nome } })));
-}
-
 async function handleLoginSubmit(event) {
     event.preventDefault();
     const nome = elements.name.value.trim();
@@ -119,10 +112,18 @@ export function initAccountView() {
     initProfileView();
 
     elements.form.addEventListener("submit", handleLoginSubmit);
-    // O login pode abrir pelo topo ou por "Adicionar ao carrinho": os nomes carregam quando o campo
-    // recebe foco, e o formulário (com a senha) é limpo sempre que o modal fecha.
-    elements.name.addEventListener("focus", () => void fillStudentNames());
+    // Nome escolhido na lista de alunos: o foco segue para a senha
+    const studentPicker = initStudentPicker({
+        input: elements.name,
+        list: $("#alunos-lista"),
+        toggle: $(".combobox__toggle"),
+        loadNames: Account.getStudentNames,
+        onPick: () => elements.password.focus(),
+    });
+    // O login pode abrir pelo topo ou por "Adicionar ao carrinho": o formulário (com a senha)
+    // é limpo sempre que o modal fecha.
     $("#auth-modal").addEventListener("close", () => {
+        studentPicker.close();
         elements.form.reset();
         Account.forgetProductWaitingForLogin();
     });
