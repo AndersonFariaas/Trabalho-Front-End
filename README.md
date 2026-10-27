@@ -16,7 +16,7 @@ Projeto do curso Técnico em Desenvolvimento de Sistemas.
 
 ## Como testar no seu computador
 
-Precisa só do Node.js 20 ou mais novo.
+Precisa só do Node.js 22.12 ou mais novo.
 
 ```bash
 npm install
@@ -52,7 +52,7 @@ Assim, ninguém consegue mudar o preço ou o próprio saldo pelo navegador.
 | `js/ui/`                    | Partes da tela: menu, modais, carrossel, catálogo, login, perfil |
 | `js/features/`              | Regras do site: conta do aluno e carrinho                        |
 | `js/services/`              | Conversa com o servidor e com a API de produtos                  |
-| `shared/products.js`        | Regra do preço em moedas, usada pelo site **e** pelo servidor    |
+| `shared/`                   | Preço em moedas e níveis, usados pelo site **e** pelo servidor   |
 | `api/`                      | As rotas do servidor: login, sair, perfil e compra               |
 | `lib/`                      | Código de apoio do servidor: senha, sessão, saldo, inventário    |
 | `tests/`                    | Testes automáticos                                               |
